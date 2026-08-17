@@ -1,0 +1,729 @@
+[
+  {
+    "id": "q6",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost Optimization & BigQuery Architecture",
+    "caseStudy": "Altostrat Media",
+    "question": "Altostrat Media runs ad-hoc analytics queries on a multi-terabyte log dataset in BigQuery. Query costs are unexpectedly high due to full table scans. How can you optimize BigQuery performance and reduce query costs with minimal architectural changes?",
+    "options": [
+      "A. Export BigQuery data to Cloud Storage and query using Cloud Bigtable",
+      "B. Implement Table Partitioning (e.g., by date) and Clustering on frequently filtered columns",
+      "C. Convert all BigQuery tables to Cloud SQL instance tables",
+      "D. Purchase reserved Compute Engine instances to run Spark jobs on Dataproc"
+    ],
+    "correctAnswer": "B",
+    "explanation": "BigQuery charges based on bytes scanned. Partitioning tables by date/timestamp and clustering by high-cardinality search columns allows BigQuery to scan only the necessary data blocks, drastically reducing costs and speeding up query performance.",
+    "distractors": {
+      "A": "Bigtable is optimized for low-latency row lookups, not analytical ad-hoc SQL aggregation queries over terabytes of data.",
+      "C": "Cloud SQL cannot scale to multi-terabyte log analytics efficiently like BigQuery and lacks serverless parallel execution.",
+      "D": "Running Dataproc requires managing clusters and does not fix BigQuery's data layout cost issue."
+    }
+  },
+  {
+    "id": "q13",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Storage Lifecycle Management & Cost Optimization",
+    "caseStudy": "Altostrat Media",
+    "question": "Altostrat Media stores petabytes of raw video media assets in Cloud Storage. Assets are accessed daily for the first 30 days, accessed once a month for up to 90 days, and rarely accessed after 90 days but must be retained for 7 years for compliance. How can you minimize storage costs automatically?",
+    "options": [
+      "A. Keep all data in Cloud Storage Standard class perpetually",
+      "B. Configure Object Lifecycle Management rules to transition objects to Nearline after 30 days, Coldline after 90 days, and Archive class after 365 days",
+      "C. Run a daily cron job with gcloud storage mv commands on a GCE instance",
+      "D. Compress video files using Cloud Dataflow into BigQuery"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Cloud Storage Object Lifecycle Management automatically transitions objects between storage classes (Standard -> Nearline -> Coldline -> Archive) based on age or conditions without application changes, delivering maximum cost optimization.",
+    "distractors": {
+      "A": "Storing petabytes of infrequently accessed data in Standard storage incurs high unnecessary monthly costs.",
+      "C": "Manual cron scripts with gcloud commands are inefficient, error-prone, and introduce unnecessary VM computing cost.",
+      "D": "BigQuery is designed for structured tabular analytics data, not binary raw video media storage."
+    }
+  },
+  {
+    "id": "q23",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Bulk Data Migration & Bandwidth Trade-offs",
+    "caseStudy": "Altostrat Media",
+    "question": "Altostrat Media has 600 TB of historical video archives on local NAS storage that must be migrated to Cloud Storage Coldline. Their available internet connection speed to GCP is a shared 100 Mbps connection. What is the fastest and most practical migration method?",
+    "options": [
+      "A. Upload files via gcloud storage CLI over the 100 Mbps connection",
+      "B. Request a Google Cloud Transfer Appliance, copy data locally, and ship it back to Google",
+      "C. Setup Cloud VPN and run rsync over VPN",
+      "D. Write a custom Python script using Cloud Storage API"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Transferring 600 TB over a shared 100 Mbps link would take over 550 days. Ordering a Google Transfer Appliance allows local high-speed rack data loading and physical secure shipment to Google data centers in days.",
+    "distractors": {
+      "A": "Uploading 600 TB over 100 Mbps takes over a year and saturates corporate internet.",
+      "C": "Cloud VPN still relies on the 100 Mbps internet pipe, which is bottlenecked.",
+      "D": "Custom Python scripts cannot overcome physical network bandwidth limitations."
+    }
+  },
+  {
+    "id": "q24",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Compute Cost Optimization & Spot Instances",
+    "caseStudy": "General Architecture",
+    "question": "A financial firm runs nightly batch Monte Carlo risk simulations taking 4 hours across 500 Compute Engine instances. The workload is fault-tolerant and can checkpoint progress. How can the firm reduce compute costs by up to 60-91%?",
+    "options": [
+      "A. Use Reserved Compute Engine instances with 3-year commitments",
+      "B. Use Spot VMs (Preemptible VMs) in Managed Instance Groups with autoscaling",
+      "C. Run batch jobs on Cloud SQL instances",
+      "D. Use Sole-Tenant Nodes"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Spot VMs leverage spare GCP capacity at discounts of 60-91% compared to standard prices. Because the workload is fault-tolerant and checkpointed, preemption can be handled seamlessly by Managed Instance Groups.",
+    "distractors": {
+      "A": "Committed Use Discounts (CUDs) require 1 or 3 year continuous commitments for baseline predictable workloads, not 4-hour nightly bursts.",
+      "C": "Cloud SQL is a relational database management service, not a batch compute cluster.",
+      "D": "Sole-Tenant Nodes are dedicated physical servers for licensing/compliance, incurring higher dedicated cost."
+    }
+  },
+  {
+    "id": "q42",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Serverless Analytics & Operational Overhead",
+    "caseStudy": "Altostrat Media",
+    "question": "Altostrat Media runs periodic PySpark batch jobs for log transformations. They want to eliminate the operational overhead of managing Dataproc cluster sizing, node provisioning, and software patching. Which GCP service should they choose?",
+    "options": [
+      "A. Dataproc on Compute Engine cluster with 10 master nodes",
+      "B. Dataproc Serverless for Spark",
+      "C. Run Spark jobs inside Compute Engine startup scripts",
+      "D. Bigtable batch jobs"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Dataproc Serverless allows developers to execute PySpark/Spark SQL workloads without managing or scaling clusters, paying only for the duration of job execution.",
+    "distractors": {
+      "A": "Managing standard Dataproc clusters requires configuring node pools, cluster sizing, and OS software maintenance.",
+      "C": "Running Spark on raw VMs requires manual cluster management, setup, and maintenance scripts.",
+      "D": "Bigtable is a NoSQL database, not an Apache Spark execution engine."
+    }
+  },
+  {
+    "id": "q45",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "BigQuery Sub-Second Analytics Acceleration",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail has an executive Looker dashboard connected to BigQuery. Business executives report that dashboard refresh times take 5-10 seconds. You need sub-second query response times for concurrent users without refactoring queries. What BigQuery feature should be enabled?",
+    "options": [
+      "A. Export BigQuery data to Google Sheets",
+      "B. Enable BigQuery BI Engine in-memory analysis service",
+      "C. Store data in Cloud Bigtable",
+      "D. Run manual SQL scripts every minute"
+    ],
+    "correctAnswer": "B",
+    "explanation": "BigQuery BI Engine is a fast in-memory analysis service that integrates with BigQuery to accelerate SQL queries and dashboard tools (Looker, Tableau) with sub-second response times and high concurrency.",
+    "distractors": {
+      "A": "Google Sheets cannot handle enterprise data warehouse scales or concurrent executive queries.",
+      "C": "Migrating BigQuery analytical tables to Bigtable requires complete application rewrite and schema redesign.",
+      "D": "Manual SQL scripts do not accelerate Looker dashboard render speeds."
+    }
+  },
+  {
+    "id": "q91",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Committed Use Discount (CUD) Strategy",
+    "caseStudy": "General Architecture",
+    "question": "An enterprise runs 200 Compute Engine vCPUs continuously 24/7 across multiple machine families (N2, N2D, C2) in a single region to support baseline web infrastructure. How can the finance team achieve up to 46-57% cost savings without committing to specific machine shapes?",
+    "options": [
+      "A. Purchase Flexible Committed Use Discounts (Flexible CUDs) or Resource-based CUDs for Compute Engine",
+      "B. Convert all instances to Spot VMs",
+      "C. Turn off instances every night for 12 hours",
+      "D. Move all instances to Cloud Storage"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Flexible Committed Use Discounts (CUDs) offer deep discounts on Compute Engine in exchange for a 1-year or 3-year hourly spend commitment, applying across instance families, regions, and projects automatically.",
+    "distractors": {
+      "A": "",
+      "B": "Spot VMs can be preempted at any time, making them unsuitable for 24/7 baseline production web applications.",
+      "C": "Turning off baseline 24/7 production web instances causes application outages.",
+      "D": "Cloud Storage stores files, not virtual machine workloads."
+    }
+  },
+  {
+    "id": "q92",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "BigQuery Capacity Planning & Slots",
+    "caseStudy": "Altostrat Media",
+    "question": "Altostrat Media runs massive ad-hoc analytical queries in BigQuery. On peak billing months, compute costs vary unpredictably under On-Demand pricing ($6.25 per TB scanned). How can they cap monthly costs and secure dedicated query execution capacity?",
+    "options": [
+      "A. Switch from On-Demand pricing to BigQuery Capacity Commitments / Slot Reservations (Editions: Standard, Enterprise, or Enterprise Plus)",
+      "B. Store analytical data in Microsoft Access files",
+      "C. Limit all queries to 1 row result using LIMIT 1",
+      "D. Run queries on local developer laptops"
+    ],
+    "correctAnswer": "A",
+    "explanation": "BigQuery Editions (Slot Reservations) allow organizations to purchase dedicated query processing capacity (slots) on predictable monthly or annual commitments, capping query spend while securing guaranteed compute capacity.",
+    "distractors": {
+      "A": "",
+      "B": "Microsoft Access cannot handle petabyte enterprise analytics.",
+      "C": "Adding `LIMIT 1` still scans the full table in BigQuery unless table partitioning/clustering is used.",
+      "D": "Local laptops cannot process multi-terabyte log datasets."
+    }
+  },
+  {
+    "id": "q93",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Dataproc Cluster Cost Optimization",
+    "caseStudy": "General Architecture",
+    "question": "A data science team processes 10 TB Spark batch jobs on Dataproc. The cluster takes 2 hours to run. The primary master node and initial worker nodes must remain stable, but worker scaling nodes can be preempted without failing the Spark job. How should the Dataproc cluster be configured for minimum cost?",
+    "options": [
+      "A. Configure Primary Worker Nodes as Standard VMs and Secondary Worker Nodes as Spot (Preemptible) VMs",
+      "B. Use 100 Master Nodes",
+      "C. Use 100% Spot VMs for the Master Node",
+      "D. Run Spark jobs on Cloud Functions"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Dataproc supports Secondary Worker Nodes composed of Spot (Preemptible) VMs. Spark handles losing secondary worker nodes gracefully while standard primary workers maintain YARN state, cutting cluster compute cost significantly.",
+    "distractors": {
+      "A": "",
+      "B": "Multiple master nodes increase cost without improving Spark worker node cost efficiency.",
+      "C": "Preempting the Dataproc Master node causes YARN cluster manager failure and job aborts.",
+      "D": "Cloud Functions cannot host distributed Apache Spark YARN cluster topologies."
+    }
+  },
+  {
+    "id": "q94",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cloud Storage Minimum Duration Charges",
+    "caseStudy": "General Architecture",
+    "question": "A team moves 50 TB of log files into Cloud Storage Archive class. After 5 days, they delete the objects. They are surprised to receive a large storage charge on their bill. Why did this occur?",
+    "options": [
+      "A. Cloud Storage Archive class has a minimum 365-day retention billing commitment; early deletion incurs early deletion fees for the remaining days",
+      "B. Cloud Storage charges extra for file deletion operations",
+      "C. Deleting files triggers automatic data compression fees",
+      "D. Archive class is free for the first year"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Infrequent access storage classes have minimum billing durations (Nearline: 30 days, Coldline: 90 days, Archive: 365 days). Deleting or overwriting objects before the minimum duration incurs an early deletion fee for the remaining days.",
+    "distractors": {
+      "A": "",
+      "B": "Standard file deletion requests are standard API ops, but early deletion fees apply to cold storage duration commitments.",
+      "C": "Deleting files does not trigger compression fees.",
+      "D": "Archive class is not free."
+    }
+  },
+  {
+    "id": "q95",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Network Egress Cost Optimization",
+    "caseStudy": "General Architecture",
+    "question": "An enterprise spends $20,000/month on internet egress charges caused by microservices in `us-east1` continuously querying database instances in `us-central1`. How can you eliminate cross-region egress charges with minimal effort?",
+    "options": [
+      "A. Move or co-locate the microservices and database instances into the same region (`us-east1` or `us-central1`) or use read replicas locally",
+      "B. Upgrade the internet bandwidth pipe",
+      "C. Compress log output into ZIP files",
+      "D. Use Cloud DNS Public Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Traffic traversing between different GCP regions incurs cross-region egress network fees. Co-locating compute workloads and database endpoints in the same region eliminates inter-region network traffic cost.",
+    "distractors": {
+      "A": "",
+      "B": "Upgrading internet pipes does not remove GCP inter-region network egress rates.",
+      "C": "Log zip compression does not eliminate database query packet traffic between regions.",
+      "D": "DNS forwarding does not alter database packet network routing paths."
+    }
+  },
+  {
+    "id": "q96",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost Attribution & Billing Exports",
+    "caseStudy": "General Architecture",
+    "question": "A central finance team needs to track GCP resource spending per cost-center department (`department=marketing`, `department=engineering`) across 100 projects. They need granular SQL query analysis of daily usage charges. How should this be implemented?",
+    "options": [
+      "A. Apply mandatory Resource Labels to all GCP resources/projects and enable Cloud Billing Export to BigQuery",
+      "B. Review monthly PDF invoices manually",
+      "C. Require developers to submit weekly cost spreadsheets",
+      "D. Disable billing accounts"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Combining mandatory resource/project labels with Cloud Billing Export to BigQuery allows financial teams to run detailed SQL queries analyzing spend breakdowns by department, environment, or label key.",
+    "distractors": {
+      "A": "",
+      "B": "Monthly PDF invoices show high-level summary totals, lacking granular department label breakdowns.",
+      "C": "Weekly manual spreadsheets are inaccurate and introduce heavy administrative toil.",
+      "D": "Disabling billing accounts shuts down production cloud infrastructure."
+    }
+  },
+  {
+    "id": "q97",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Application Modernization Patterns",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail wants to decompose a massive legacy monolithic application into microservices gradually over 18 months without a high-risk 'big bang' rewrite. They want an API routing layer to intercept incoming requests and direct migrated endpoints to Cloud Run while routing legacy requests to the monolith. What architectural pattern is this?",
+    "options": [
+      "A. Big Bang Migration Pattern",
+      "B. Strangler Fig (Strangler Application) Migration Pattern",
+      "C. Lift and Shift (Rehost) Pattern",
+      "D. Offline Tape Archive Pattern"
+    ],
+    "correctAnswer": "B",
+    "explanation": "The Strangler Fig pattern incrementally replaces specific features of a legacy monolith with new microservices behind an API gateway/proxy, gradually retiring the old system without high-risk total rewrites.",
+    "distractors": {
+      "A": "Big Bang migration rewrites everything at once, incurring massive operational failure risk.",
+      "C": "Lift and Shift moves the monolith unchanged to cloud VMs without decomposing it into microservices.",
+      "D": "Offline Tape Archive is a backup strategy."
+    }
+  },
+  {
+    "id": "q98",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "GKE Pod Rightsizing & VPA",
+    "caseStudy": "General Architecture",
+    "question": "A GKE cluster developer requests 16 vCPUs and 32 GB RAM for a microservice pod, but metrics show the pod actually uses only 0.2 vCPU and 512 MB RAM. This causes Cluster Autoscaler to launch unnecessary expensive nodes. What tool provides automated CPU/RAM request rightsizing recommendations?",
+    "options": [
+      "A. Vertical Pod Autoscaler (VPA) in Recommendation Mode or GKE Cost Optimization Insights",
+      "B. Horizontal Pod Autoscaler (HPA)",
+      "C. Cloud NAT Gateway",
+      "D. Storage Transfer Service"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Vertical Pod Autoscaler (VPA) in recommendation mode analyzes actual historical CPU/RAM consumption and provides precise rightsizing resource request recommendations, preventing node over-provisioning.",
+    "distractors": {
+      "A": "",
+      "B": "HPA scales the number of pod replicas, but does not adjust individual pod CPU/RAM request sizes.",
+      "C": "Cloud NAT manages outbound IP translation.",
+      "D": "Storage Transfer Service migrates data files."
+    }
+  },
+  {
+    "id": "q99",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "6 Rs Cloud Migration Strategy Trade-offs",
+    "caseStudy": "General Architecture",
+    "question": "An enterprise needs to evacuate a physical data center in 60 days due to lease expiration. They have 300 legacy Linux VMs. What migration approach minimizes short-term migration time and risk?",
+    "options": [
+      "A. Complete cloud-native refactoring to microservices and Cloud Spanner",
+      "B. Rehost (Lift and Shift) using Migrate to Compute Engine (formerly Velostrata)",
+      "C. Retire all applications permanently",
+      "D. Rewrite all applications in Assembly language"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Rehosting (Lift and Shift) using Migrate to Compute Engine streams VM disks into GCP VMs directly, enabling rapid data center evacuation within tight deadlines (60 days) before refactoring later.",
+    "distractors": {
+      "A": "Complete application refactoring takes 12-24 months and fails the 60-day deadline.",
+      "C": "Retiring all applications destroys ongoing business operations.",
+      "D": "Rewriting in Assembly is impractical."
+    }
+  },
+  {
+    "id": "q100",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Automated Budget Alerts & Cap Enforcement",
+    "caseStudy": "General Architecture",
+    "question": "A startup wants to ensure a development GCP project never exceeds $5,000/month. They want an automated system that sends alerts at 50%, 80%, and 100% of budget, and triggers a Cloud Function to disable billing or remove project permissions if 100% is breached. What GCP architecture accomplishes this?",
+    "options": [
+      "A. Configure a Cloud Billing Budget with threshold rules connected to a Pub/Sub topic that triggers a Cloud Function executing billing cap actions",
+      "B. Check the GCP Console once a month manually",
+      "C. Send credit card statements via postal mail",
+      "D. Limit developer laptop battery charge to 50%"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Billing Budgets publish notifications to a Pub/Sub topic when spend thresholds are hit. Triggering a Cloud Function allows automated programmatical response (e.g., disabling project billing or stopping non-essential VMs).",
+    "distractors": {
+      "A": "",
+      "B": "Checking once a month manually allows runaway cost spikes to occur undetected.",
+      "C": "Postal mail statements arrive weeks after spending has occurred.",
+      "D": "Laptop battery charge levels do not affect cloud billing caps."
+    }
+  },
+  {
+    "id": "q171",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 1: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  },
+  {
+    "id": "q172",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 2: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  },
+  {
+    "id": "q173",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 3: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  },
+  {
+    "id": "q174",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 4: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  },
+  {
+    "id": "q175",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 5: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  },
+  {
+    "id": "q176",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 6: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  },
+  {
+    "id": "q177",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 7: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  },
+  {
+    "id": "q178",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 8: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  },
+  {
+    "id": "q179",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 9: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  },
+  {
+    "id": "q180",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 10: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  },
+  {
+    "id": "q181",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 11: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  },
+  {
+    "id": "q182",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 12: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  },
+  {
+    "id": "q183",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 13: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  },
+  {
+    "id": "q184",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 14: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  },
+  {
+    "id": "q185",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 15: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  },
+  {
+    "id": "q186",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 16: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  },
+  {
+    "id": "q187",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 17: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  },
+  {
+    "id": "q188",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 18: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  },
+  {
+    "id": "q189",
+    "domain": "Domain 4: Analyzing and optimizing technical and business processes",
+    "topic": "Cost & Process Optimization Strategies",
+    "caseStudy": "Altostrat Media",
+    "question": "Cost Optimization Scenario 19: Altostrat Media analyzes cloud costs across 50 project environments. They want to identify idle Compute Engine instances, unattached persistent disks, and over-provisioned BigQuery queries automatically. What GCP service provides automated cost recommendations?",
+    "options": [
+      "A. Active Assist / Recommender API (Cost & Idle Resource Recommenders)",
+      "B. Cloud Armor",
+      "C. VPC Service Controls",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Active Assist / Recommender API uses machine learning to automatically analyze project usage and generate cost optimization, rightsizing, and idle resource cleanup recommendations.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Armor is a web application firewall.",
+      "C": "VPC Service Controls handle API security perimeters.",
+      "D": "Cloud DNS handles domain resolution."
+    }
+  }
+]

@@ -1,0 +1,457 @@
+[
+  {
+    "id": "q7",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Container Migration & Microservices",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail is migrating a monolithic legacy e-commerce application to GCP. They want to containerize the core application and deploy it with automatic horizontal scaling, zero server management overhead, and support for HTTP/S traffic routing. What is the fastest, lowest-operational-overhead GCP serverless compute target?",
+    "options": [
+      "A. GKE Autopilot",
+      "B. Cloud Run",
+      "C. Compute Engine Instance Groups with Autoscaling",
+      "D. Bare Metal Solution"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Cloud Run is a fully managed serverless compute platform that automatically scales stateless container instances up or down (including scale-to-zero) without requiring node management, cluster maintenance, or Kubernetes configuration overhead.",
+    "distractors": {
+      "A": "GKE Autopilot manages node provisioning, but still requires Kubernetes cluster concepts (deployments, services, ingress, YAML manifests). Cloud Run has lower operational overhead for stateless web containers.",
+      "C": "Compute Engine instance groups require OS patching, VM image maintenance, and slower scaling metrics.",
+      "D": "Bare Metal Solution is for legacy non-virtualized workloads like specialized Oracle databases, not serverless container migration."
+    }
+  },
+  {
+    "id": "q21",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Database Migration & Change Data Capture (CDC)",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail needs to migrate an on-premises MySQL database to Cloud SQL for MySQL with zero downtime. During migration, ongoing updates on the source database must be replicated continuously to the target database until cutover. What combination of GCP services should be used?",
+    "options": [
+      "A. Perform nightly mysqldump exports uploaded via Storage Transfer Service",
+      "B. Use Database Migration Service (DMS) with continuous Change Data Capture (CDC) replication",
+      "C. Export data to Cloud Storage and import using Dataflow batch jobs",
+      "D. Use Transfer Appliance for physical disk shipment"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Database Migration Service (DMS) provides serverless, continuous replication using MySQL binary logs (CDC) to stream live transactional changes from on-premises to Cloud SQL with minimal downtime during final cutover.",
+    "distractors": {
+      "A": "Nightly mysqldump exports require significant downtime and data loss between snapshot intervals.",
+      "C": "Dataflow batch jobs do not maintain transactional CDC ordering or zero-downtime database cutover synchronization.",
+      "D": "Transfer Appliance is for offline bulk file transfer (petabytes), not live relational database replication."
+    }
+  },
+  {
+    "id": "q25",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "API Management & Modernization",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail wants to securely expose legacy backend SOAP services to external mobile app developers as modern REST APIs with OAuth2 authentication, rate limiting, and developer monetization features. Which GCP platform should be deployed?",
+    "options": [
+      "A. Cloud Endpoints",
+      "B. Apigee API Management",
+      "C. Cloud Armor",
+      "D. Internal HTTP/S Load Balancer"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Apigee is Google's full-lifecycle enterprise API management platform designed for API transformation (SOAP to REST), developer portals, OAuth2 tokenization, rate limiting, and monetization.",
+    "distractors": {
+      "A": "Cloud Endpoints is a lightweight API gateway for internal gRPC/REST APIs, lacking developer portal monetization and complex enterprise SOAP transformation features.",
+      "C": "Cloud Armor is a WAF/DDoS security service, not an API management or transformation gateway.",
+      "D": "Internal Load Balancer routes network traffic, but does not provide API lifecycle or authentication translation."
+    }
+  },
+  {
+    "id": "q28",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Multi-Cluster Service Mesh & Traffic Management",
+    "caseStudy": "General Architecture",
+    "question": "An enterprise runs microservices across three separate GKE clusters in different regions. You need uniform mTLS encryption between services, cross-cluster service discovery, and traffic shifting (canary releases) without rewriting application code. What technology should you deploy?",
+    "options": [
+      "A. GKE Ingress controllers in each cluster",
+      "B. Anthos Service Mesh (ASM) / Service Mesh powered by Istio",
+      "C. Cloud DNS forwarding rules",
+      "D. Cloud Armor security policies"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Anthos Service Mesh (ASM) provides multi-cluster service mesh capabilities including transparent mutual TLS (mTLS) encryption, cross-cluster service discovery, traffic management (canary split), and observability out-of-the-box.",
+    "distractors": {
+      "A": "GKE Ingress manages external edge ingress traffic into a single cluster, not cross-cluster pod-to-pod mesh mTLS.",
+      "C": "Cloud DNS resolves hostnames, but does not handle mTLS encryption or fine-grained traffic routing between microservices.",
+      "D": "Cloud Armor protects HTTP/S load balancer edge traffic, not inter-service internal mesh communication."
+    }
+  },
+  {
+    "id": "q43",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Continuous Delivery & Canary Deployments",
+    "caseStudy": "General Architecture",
+    "question": "An engineering team wants an automated continuous delivery platform for GKE that manages progressive rollouts (canary deployments), automated rollback upon failed health checks, and approval gates. What GCP native continuous delivery service provides this?",
+    "options": [
+      "A. Cloud Build",
+      "B. Cloud Deploy",
+      "C. Container Registry",
+      "D. Cloud Functions"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Cloud Deploy is a fully managed continuous delivery service that automates application delivery to GKE and Cloud Run with release pipelines, canary strategy rollouts, and single-click rollbacks.",
+    "distractors": {
+      "A": "Cloud Build is a CI (Continuous Integration) engine for building container images and running tests, whereas Cloud Deploy manages progressive CD release pipelines.",
+      "C": "Container Registry stores container images, but does not orchestrate deployment release pipelines.",
+      "D": "Cloud Functions is a serverless compute runtime, not a deployment pipeline tool."
+    }
+  },
+  {
+    "id": "q48",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Hybrid Service Discovery",
+    "caseStudy": "KnightMotives Automotive",
+    "question": "KnightMotives has microservices running across GKE, Cloud Run, and on-premises virtual machines connected via Dedicated Interconnect. They need a single, centralized service registry to discover internal endpoint IP addresses and ports across hybrid environments. What GCP service fulfills this?",
+    "options": [
+      "A. Cloud DNS Public Zones",
+      "B. Service Directory",
+      "C. Cloud Armor",
+      "D. Security Command Center"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Service Directory is Google Cloud's managed service registry that provides a single, unified endpoint registry for services across GKE, Compute Engine, Cloud Run, and on-premises environments.",
+    "distractors": {
+      "A": "Public DNS zones expose private internal service endpoints to the public internet.",
+      "C": "Cloud Armor provides edge WAF security, not hybrid microservice discovery.",
+      "D": "Security Command Center provides security posture monitoring, not service discovery registries."
+    }
+  },
+  {
+    "id": "q101",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "VM Container Migration & Migrate for Anthos",
+    "caseStudy": "General Architecture",
+    "question": "An enterprise wants to modernize 50 legacy Linux VM workloads by converting them directly into GKE container images without manually rewriting Dockerfiles from scratch. What Google migration tool automates VM-to-container extraction?",
+    "options": [
+      "A. Migrate for Anthos / Migrate to Containers",
+      "B. Storage Transfer Service",
+      "C. Database Migration Service",
+      "D. gcloud storage cp"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Migrate to Containers (formerly Migrate for Anthos) automates extracting application workloads directly from physical or virtual VM instances and converting them into GKE container images and Kubernetes YAML manifests.",
+    "distractors": {
+      "A": "",
+      "B": "Storage Transfer Service moves object files, not VM image extraction to Docker containers.",
+      "C": "Database Migration Service replicates database engine data, not VM compute applications.",
+      "D": "gcloud storage copies files."
+    }
+  },
+  {
+    "id": "q102",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Managed Mainframe Modernization",
+    "caseStudy": "General Architecture",
+    "question": "A financial bank wants to migrate legacy IBM COBOL mainframe workloads to GCP. They want to rehost the COBOL applications on Linux VMs in GCP while maintaining mainframe transaction processing capabilities. What GCP solution assists mainframe migration?",
+    "options": [
+      "A. Dual-Region Cloud Storage buckets",
+      "B. Google Cloud Dual-Run / Mainframe Modernization Solution",
+      "C. Cloud Functions (1st gen)",
+      "D. Firestore in Native Mode"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Google Cloud Mainframe Modernization / Dual-Run allows mainframe applications to run in parallel on cloud instances, enabling zero-risk verification of transactions before cutover.",
+    "distractors": {
+      "A": "Storage buckets store files, but do not execute COBOL mainframe application logic.",
+      "C": "Cloud Functions are lightweight event triggers, not mainframe emulation environments.",
+      "D": "Firestore is a mobile document database."
+    }
+  },
+  {
+    "id": "q103",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Continuous Integration Pipelines & Cloud Build",
+    "caseStudy": "General Architecture",
+    "question": "A development team wants to trigger automated container builds, unit tests, and vulnerability scanning every time a pull request is merged into their GitHub repository. The build pipeline must run serverlessly without managing Jenkins master or worker nodes. Which GCP service should be used?",
+    "options": [
+      "A. Cloud Build with GitHub Triggers",
+      "B. Compute Engine standalone VM running Jenkins",
+      "C. Cloud Scheduler",
+      "D. Bare Metal Solution"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Build is a serverless CI/CD platform that integrates natively with GitHub/GitLab to execute fast, parallel container builds and automated testing workflows without build server management.",
+    "distractors": {
+      "A": "",
+      "B": "Self-managing Jenkins on VMs requires maintaining build nodes, OS patching, and paying for idle VM compute.",
+      "C": "Cloud Scheduler triggers cron HTTP endpoints, not complex Git pull-request CI build steps.",
+      "D": "Bare Metal Solution is for legacy database hardware."
+    }
+  },
+  {
+    "id": "q104",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Blue/Green Traffic Splitting on Cloud Run",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail releases a new version of their Cloud Run checkout service. They want to route 5% of live production HTTP traffic to the new revision while keeping 95% on the stable revision, and instantly rollback to 100% stable if errors occur. How is this configured in Cloud Run?",
+    "options": [
+      "A. Configure Cloud Run Traffic Splitting percentages across service Revisions",
+      "B. Deploy a second GKE cluster and update DNS records",
+      "C. Delete the old revision immediately",
+      "D. Restart the physical datacenter switches"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Run native Traffic Splitting allows allocating explicit traffic percentages across multiple deployed revisions of a single service, facilitating safe canary/blue-green releases and instant 1-click rollbacks.",
+    "distractors": {
+      "A": "",
+      "B": "Deploying second clusters and changing DNS is slow and fails sub-second instant rollback goals.",
+      "C": "Deleting the old revision prevents rolling back if the new revision fails.",
+      "D": "Restarting datacenter switches causes total network outage."
+    }
+  },
+  {
+    "id": "q105",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Schema Migration & Liquibase / Flyway Integration",
+    "caseStudy": "General Architecture",
+    "question": "During automated Cloud Build CI/CD deployments to Cloud SQL, database schema SQL migrations (creating new columns/tables) must execute safely before new application code containers are deployed. How should schema migrations be integrated into the deployment pipeline?",
+    "options": [
+      "A. Run automated Liquibase / Flyway database migration steps in Cloud Build using Secret Manager credentials before triggering Cloud Deploy application rollout",
+      "B. Log into production database via MySQL CLI and run SQL statements manually during business hours",
+      "C. Drop all database tables before every build",
+      "D. Edit database files directly using Notepad"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Executing database migration tools (Liquibase/Flyway) as controlled pipeline steps in Cloud Build before application container deployment guarantees schema changes are applied deterministically and audited.",
+    "distractors": {
+      "A": "",
+      "B": "Manual CLI execution in production introduces human error, lacks audit tracking, and causes race conditions.",
+      "C": "Dropping database tables destroys all production customer data.",
+      "D": "Editing raw database data files corrupts the database engine."
+    }
+  },
+  {
+    "id": "q190",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Application Modernization & Release Pipelines",
+    "caseStudy": "Cymbal Retail",
+    "question": "Implementation Scenario 1: Cymbal Retail is modernizing its application rollout pipeline. They need automated canary deployment pipelines targeting GKE and Cloud Run with automated health check validations and 1-click rollbacks. What native GCP service manages continuous delivery?",
+    "options": [
+      "A. Cloud Deploy",
+      "B. Cloud Build",
+      "C. Container Registry",
+      "D. Cloud Tasks"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Deploy provides managed continuous delivery release pipelines for GKE, Anthos, and Cloud Run with canary strategies and automated rollbacks.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Build handles continuous integration (CI) builds and testing.",
+      "C": "Container Registry stores Docker images.",
+      "D": "Cloud Tasks handles rate-limited queue dispatching."
+    }
+  },
+  {
+    "id": "q191",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Application Modernization & Release Pipelines",
+    "caseStudy": "Cymbal Retail",
+    "question": "Implementation Scenario 2: Cymbal Retail is modernizing its application rollout pipeline. They need automated canary deployment pipelines targeting GKE and Cloud Run with automated health check validations and 1-click rollbacks. What native GCP service manages continuous delivery?",
+    "options": [
+      "A. Cloud Deploy",
+      "B. Cloud Build",
+      "C. Container Registry",
+      "D. Cloud Tasks"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Deploy provides managed continuous delivery release pipelines for GKE, Anthos, and Cloud Run with canary strategies and automated rollbacks.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Build handles continuous integration (CI) builds and testing.",
+      "C": "Container Registry stores Docker images.",
+      "D": "Cloud Tasks handles rate-limited queue dispatching."
+    }
+  },
+  {
+    "id": "q192",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Application Modernization & Release Pipelines",
+    "caseStudy": "Cymbal Retail",
+    "question": "Implementation Scenario 3: Cymbal Retail is modernizing its application rollout pipeline. They need automated canary deployment pipelines targeting GKE and Cloud Run with automated health check validations and 1-click rollbacks. What native GCP service manages continuous delivery?",
+    "options": [
+      "A. Cloud Deploy",
+      "B. Cloud Build",
+      "C. Container Registry",
+      "D. Cloud Tasks"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Deploy provides managed continuous delivery release pipelines for GKE, Anthos, and Cloud Run with canary strategies and automated rollbacks.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Build handles continuous integration (CI) builds and testing.",
+      "C": "Container Registry stores Docker images.",
+      "D": "Cloud Tasks handles rate-limited queue dispatching."
+    }
+  },
+  {
+    "id": "q193",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Application Modernization & Release Pipelines",
+    "caseStudy": "Cymbal Retail",
+    "question": "Implementation Scenario 4: Cymbal Retail is modernizing its application rollout pipeline. They need automated canary deployment pipelines targeting GKE and Cloud Run with automated health check validations and 1-click rollbacks. What native GCP service manages continuous delivery?",
+    "options": [
+      "A. Cloud Deploy",
+      "B. Cloud Build",
+      "C. Container Registry",
+      "D. Cloud Tasks"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Deploy provides managed continuous delivery release pipelines for GKE, Anthos, and Cloud Run with canary strategies and automated rollbacks.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Build handles continuous integration (CI) builds and testing.",
+      "C": "Container Registry stores Docker images.",
+      "D": "Cloud Tasks handles rate-limited queue dispatching."
+    }
+  },
+  {
+    "id": "q194",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Application Modernization & Release Pipelines",
+    "caseStudy": "Cymbal Retail",
+    "question": "Implementation Scenario 5: Cymbal Retail is modernizing its application rollout pipeline. They need automated canary deployment pipelines targeting GKE and Cloud Run with automated health check validations and 1-click rollbacks. What native GCP service manages continuous delivery?",
+    "options": [
+      "A. Cloud Deploy",
+      "B. Cloud Build",
+      "C. Container Registry",
+      "D. Cloud Tasks"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Deploy provides managed continuous delivery release pipelines for GKE, Anthos, and Cloud Run with canary strategies and automated rollbacks.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Build handles continuous integration (CI) builds and testing.",
+      "C": "Container Registry stores Docker images.",
+      "D": "Cloud Tasks handles rate-limited queue dispatching."
+    }
+  },
+  {
+    "id": "q195",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Application Modernization & Release Pipelines",
+    "caseStudy": "Cymbal Retail",
+    "question": "Implementation Scenario 6: Cymbal Retail is modernizing its application rollout pipeline. They need automated canary deployment pipelines targeting GKE and Cloud Run with automated health check validations and 1-click rollbacks. What native GCP service manages continuous delivery?",
+    "options": [
+      "A. Cloud Deploy",
+      "B. Cloud Build",
+      "C. Container Registry",
+      "D. Cloud Tasks"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Deploy provides managed continuous delivery release pipelines for GKE, Anthos, and Cloud Run with canary strategies and automated rollbacks.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Build handles continuous integration (CI) builds and testing.",
+      "C": "Container Registry stores Docker images.",
+      "D": "Cloud Tasks handles rate-limited queue dispatching."
+    }
+  },
+  {
+    "id": "q196",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Application Modernization & Release Pipelines",
+    "caseStudy": "Cymbal Retail",
+    "question": "Implementation Scenario 7: Cymbal Retail is modernizing its application rollout pipeline. They need automated canary deployment pipelines targeting GKE and Cloud Run with automated health check validations and 1-click rollbacks. What native GCP service manages continuous delivery?",
+    "options": [
+      "A. Cloud Deploy",
+      "B. Cloud Build",
+      "C. Container Registry",
+      "D. Cloud Tasks"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Deploy provides managed continuous delivery release pipelines for GKE, Anthos, and Cloud Run with canary strategies and automated rollbacks.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Build handles continuous integration (CI) builds and testing.",
+      "C": "Container Registry stores Docker images.",
+      "D": "Cloud Tasks handles rate-limited queue dispatching."
+    }
+  },
+  {
+    "id": "q197",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Application Modernization & Release Pipelines",
+    "caseStudy": "Cymbal Retail",
+    "question": "Implementation Scenario 8: Cymbal Retail is modernizing its application rollout pipeline. They need automated canary deployment pipelines targeting GKE and Cloud Run with automated health check validations and 1-click rollbacks. What native GCP service manages continuous delivery?",
+    "options": [
+      "A. Cloud Deploy",
+      "B. Cloud Build",
+      "C. Container Registry",
+      "D. Cloud Tasks"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Deploy provides managed continuous delivery release pipelines for GKE, Anthos, and Cloud Run with canary strategies and automated rollbacks.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Build handles continuous integration (CI) builds and testing.",
+      "C": "Container Registry stores Docker images.",
+      "D": "Cloud Tasks handles rate-limited queue dispatching."
+    }
+  },
+  {
+    "id": "q198",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Application Modernization & Release Pipelines",
+    "caseStudy": "Cymbal Retail",
+    "question": "Implementation Scenario 9: Cymbal Retail is modernizing its application rollout pipeline. They need automated canary deployment pipelines targeting GKE and Cloud Run with automated health check validations and 1-click rollbacks. What native GCP service manages continuous delivery?",
+    "options": [
+      "A. Cloud Deploy",
+      "B. Cloud Build",
+      "C. Container Registry",
+      "D. Cloud Tasks"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Deploy provides managed continuous delivery release pipelines for GKE, Anthos, and Cloud Run with canary strategies and automated rollbacks.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Build handles continuous integration (CI) builds and testing.",
+      "C": "Container Registry stores Docker images.",
+      "D": "Cloud Tasks handles rate-limited queue dispatching."
+    }
+  },
+  {
+    "id": "q199",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Application Modernization & Release Pipelines",
+    "caseStudy": "Cymbal Retail",
+    "question": "Implementation Scenario 10: Cymbal Retail is modernizing its application rollout pipeline. They need automated canary deployment pipelines targeting GKE and Cloud Run with automated health check validations and 1-click rollbacks. What native GCP service manages continuous delivery?",
+    "options": [
+      "A. Cloud Deploy",
+      "B. Cloud Build",
+      "C. Container Registry",
+      "D. Cloud Tasks"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Deploy provides managed continuous delivery release pipelines for GKE, Anthos, and Cloud Run with canary strategies and automated rollbacks.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Build handles continuous integration (CI) builds and testing.",
+      "C": "Container Registry stores Docker images.",
+      "D": "Cloud Tasks handles rate-limited queue dispatching."
+    }
+  },
+  {
+    "id": "q200",
+    "domain": "Domain 5: Managing implementations of cloud architecture",
+    "topic": "Application Modernization & Release Pipelines",
+    "caseStudy": "Cymbal Retail",
+    "question": "Implementation Scenario 11: Cymbal Retail is modernizing its application rollout pipeline. They need automated canary deployment pipelines targeting GKE and Cloud Run with automated health check validations and 1-click rollbacks. What native GCP service manages continuous delivery?",
+    "options": [
+      "A. Cloud Deploy",
+      "B. Cloud Build",
+      "C. Container Registry",
+      "D. Cloud Tasks"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Deploy provides managed continuous delivery release pipelines for GKE, Anthos, and Cloud Run with canary strategies and automated rollbacks.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Build handles continuous integration (CI) builds and testing.",
+      "C": "Container Registry stores Docker images.",
+      "D": "Cloud Tasks handles rate-limited queue dispatching."
+    }
+  }
+]

@@ -1,0 +1,932 @@
+[
+  {
+    "id": "q3",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Infrastructure as Code & CI/CD",
+    "caseStudy": "General Architecture",
+    "question": "Your enterprise architecture team wants to standardize infrastructure deployments across 50 project environments. You need to ensure that infrastructure changes are peer-reviewed, state files are locked during execution, and audit logs track who deployed what. How should you architect this solution?",
+    "options": [
+      "A. Run gcloud commands via local developer workstations using service account keys",
+      "B. Use Terraform with Cloud Storage as a remote backend (with object versioning and state locking via GCS), integrated into Cloud Build CI/CD pipelines with IAM approval triggers",
+      "C. Write custom Python scripts using GCP Client Libraries stored in private Artifact Registry",
+      "D. Deploy deployment scripts using Compute Engine startup scripts attached to central bastion hosts"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Using Terraform with Cloud Storage remote backend (which supports native GCS state locking) combined with Cloud Build CI/CD pipelines provides automated, declarative Infrastructure as Code (IaC) with pull-request code reviews, centralized secret handling, state safety, and audit log generation.",
+    "distractors": {
+      "A": "Local workstation deployment using service account keys poses severe security risks and lacks centralized state locking or peer review.",
+      "C": "Custom Python imperative scripts are hard to maintain, lack state tracking, and re-invent IaC engine features.",
+      "D": "Compute Engine startup scripts are meant for VM instance bootstrapping, not multi-project infrastructure orchestration."
+    }
+  },
+  {
+    "id": "q11",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Shared VPC & Network Administration",
+    "caseStudy": "General Architecture",
+    "question": "An enterprise organization wants a centralized networking team to manage subnets, firewall rules, and VPN connections across 20 development projects while letting project teams manage their own GKE clusters and VMs without touching core network definitions. Which GCP networking model should be implemented?",
+    "options": [
+      "A. VPC Network Peering between every pair of project VPCs",
+      "B. Shared VPC with a central Host Project and Service Projects linked to it",
+      "C. External HTTP/S Load Balancers in every project with Cloud DNS forwarding",
+      "D. Multi-region Cloud VPN mesh"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Shared VPC allows an organization to connect resources from multiple projects to a common Virtual Private Cloud (VPC) network managed by a central Host Project, providing centralized network administration with delegated IAM subnet permissions to Service Projects.",
+    "distractors": {
+      "A": "VPC Peering across 20 projects creates a complex mesh, does not allow transitive routing, and delegates network creation to individual projects.",
+      "C": "Load Balancers manage traffic routing to services, not internal VPC subnets or centralized network administration.",
+      "D": "Cloud VPN mesh creates IPsec tunnels, which adds unneeded latency and configuration overhead inside GCP project environments."
+    }
+  },
+  {
+    "id": "q17",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Private Connectivity & Service Publishing",
+    "caseStudy": "General Architecture",
+    "question": "A SaaS vendor wants to securely expose a microservice API running in its GCP VPC to 100 enterprise customers across different GCP organizations without exposing public IP addresses or managing complex transitive VPC Peering CIDR overlaps. What GCP networking feature should be used?",
+    "options": [
+      "A. VPC Network Peering mesh",
+      "B. Private Service Connect (PSC) Published Service",
+      "C. Cloud VPN over public internet",
+      "D. Shared VPC with cross-tenant project linking"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Private Service Connect (PSC) allows service producers to publish services securely via internal IP endpoints in consumer VPCs using unidirectional producer-consumer endpoints without IP address overlapping conflicts or transitive peering limitations.",
+    "distractors": {
+      "A": "VPC Peering requires non-overlapping IP spaces, lacks transitivity, and grants full two-way network connectivity between producer and consumer VPCs.",
+      "C": "Cloud VPN over public internet adds encryption overhead, public IP dependencies, and complex routing management.",
+      "D": "Shared VPC cannot link projects across distinct un-managed external GCP organizations."
+    }
+  },
+  {
+    "id": "q26",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Outbound Private VM Network Connectivity",
+    "caseStudy": "General Architecture",
+    "question": "Your security policy requires that 100 Compute Engine VM instances in a private subnet must NOT have public IP addresses assigned. However, these VMs need to download OS patch updates from external internet repositories securely. What GCP service should be configured?",
+    "options": [
+      "A. External HTTP/S Load Balancer",
+      "B. Cloud NAT (Network Address Translation) Gateway",
+      "C. VPC Network Peering",
+      "D. Identity-Aware Proxy (IAP)"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Cloud NAT allows private instances without public IP addresses to initiate outbound requests to the internet for updates/patches while preventing unsolicited inbound connections from external sources.",
+    "distractors": {
+      "A": "Load Balancers handle inbound traffic routing into instances, not outbound egress internet connections from private VMs.",
+      "C": "VPC Peering connects internal GCP networks, not internet-bound egress NAT traffic.",
+      "D": "IAP allows inbound administrative SSH/RDP access to private VMs without public IPs, but does not provide outbound internet access."
+    }
+  },
+  {
+    "id": "q31",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Shared File Systems & High Performance NFS",
+    "caseStudy": "Altostrat Media",
+    "question": "Altostrat Media has a video rendering farm on Compute Engine Linux VMs that require shared concurrent POSIX-compliant read/write access to a shared file system over NFSv3 with multi-terabyte capacity and low latency. Which GCP storage service meets this requirement?",
+    "options": [
+      "A. Cloud Storage buckets mounted via gcsfuse",
+      "B. Cloud Filestore (Enterprise / High Scale)",
+      "C. Persistent Disk (pd-standard) attached to multiple VMs in read-write mode",
+      "D. BigQuery Storage API"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Cloud Filestore provides fully managed NFS file servers offering POSIX-compliant shared file storage required by video editing, rendering, and media workflows.",
+    "distractors": {
+      "A": "gcsfuse translates object storage to local directory views, but is NOT a full POSIX-compliant file system and performance is poor for file locking/video rendering.",
+      "C": "Standard Persistent Disks cannot be attached in Read-Write mode to multiple VM instances simultaneously (only Read-Only mode across multiple instances).",
+      "D": "BigQuery is an analytical data warehouse, not a POSIX NFS file system."
+    }
+  },
+  {
+    "id": "q32",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Workflow Orchestration & DAG Pipelines",
+    "caseStudy": "General Architecture",
+    "question": "Your data engineering team needs to orchestrate complex ETL pipelines involving Dataproc jobs, BigQuery queries, and Cloud Storage transfers defined as Directed Acyclic Graphs (DAGs) using Python. Which managed GCP service should be used?",
+    "options": [
+      "A. Cloud Tasks",
+      "B. Cloud Composer (managed Apache Airflow)",
+      "C. Cloud Workflows",
+      "D. Cloud Scheduler"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Cloud Composer is a fully managed workflow orchestration service built on Apache Airflow, enabling data teams to author, schedule, and monitor data pipelines using Python DAGs.",
+    "distractors": {
+      "A": "Cloud Tasks handles task queue rate-limiting, not complex multi-step data pipeline DAG orchestration.",
+      "C": "Cloud Workflows is for lightweight HTTP/JSON API orchestration, whereas Cloud Composer is built specifically for data engineering Apache Airflow DAGs.",
+      "D": "Cloud Scheduler is a cron service that triggers single HTTP endpoints, lacking pipeline dependency tracking."
+    }
+  },
+  {
+    "id": "q34",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Hybrid DNS & Name Resolution",
+    "caseStudy": "General Architecture",
+    "question": "An enterprise connected to GCP via Dedicated Interconnect needs VMs in GCP to resolve internal DNS names hosted on on-premises Active Directory DNS servers (`corp.internal`), while on-premises servers resolve GCP private DNS domains (`gcp.internal`). How should Cloud DNS be configured?",
+    "options": [
+      "A. Public DNS zone forwarding",
+      "B. Cloud DNS Private Forwarding Zones for `corp.internal` and Cloud DNS Inbound Peering/Forwarding for `gcp.internal`",
+      "C. Modify `/etc/hosts` file on every GCP VM instance via startup scripts",
+      "D. Use Cloud NAT DNS proxying"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Cloud DNS Private Forwarding Zones forward queries for on-premises domains to corporate DNS servers, while enabling Inbound DNS Forwarding allows on-premises DNS servers to query Cloud DNS private zones.",
+    "distractors": {
+      "A": "Public DNS zones expose private internal domain queries to the public internet.",
+      "C": "Editing `/etc/hosts` on all VMs is unmaintainable and does not scale across dynamic autoscaling instances.",
+      "D": "Cloud NAT handles IP translation, not DNS domain forwarding name resolution."
+    }
+  },
+  {
+    "id": "q40",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Kubernetes Autoscaling Mechanics",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail's GKE cluster experiences unexpected flash sales traffic. You need the cluster to scale the number of running pod replicas based on CPU utilization, and dynamically add new Compute Engine worker nodes when existing nodes run out of memory capacity. What features must be enabled?",
+    "options": [
+      "A. Horizontal Pod Autoscaler (HPA) and Cluster Autoscaler (CA)",
+      "B. Vertical Pod Autoscaler (VPA) only",
+      "C. Compute Engine Managed Instance Group Autoscaler only",
+      "D. Node Auto-provisioning without HPA"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Horizontal Pod Autoscaler (HPA) scales the pod count based on CPU/memory usage, while Cluster Autoscaler (CA) automatically adds worker nodes when pending pods cannot be scheduled due to insufficient node resources.",
+    "distractors": {
+      "A": "",
+      "B": "Vertical Pod Autoscaler adjusts CPU/memory resource requests of existing pods, requiring pod restarts, and does not scale out replica counts.",
+      "C": "Standard MIG autoscalers lack visibility into GKE unscheduled pod queues.",
+      "D": "Node Auto-provisioning manages node pools, but without HPA the application pod replica count will not increase under load."
+    }
+  },
+  {
+    "id": "q64",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Terraform Environment Strategy",
+    "caseStudy": "General Architecture",
+    "question": "You manage infrastructure for `dev`, `staging`, and `prod` environments using Terraform. Your team wants to ensure environment configurations are isolated, share identical module code, and maintain independent state files stored in separate Cloud Storage buckets per environment. How should your Terraform directory structure be designed?",
+    "options": [
+      "A. Put all environments into a single main.tf file using hardcoded conditional IF statements",
+      "B. Use a root environment directory structure (e.g., `environments/dev`, `environments/prod`) invoking reusable modules, with dedicated GCS backend definitions per directory",
+      "C. Store state files locally on developer laptops and email state files before deployments",
+      "D. Use a single GCS backend bucket without state locking"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Separating environments into distinct directories (`environments/dev`, `environments/prod`) that invoke shared versioned modules with distinct remote GCS backends guarantees state file isolation and prevents accidental cross-environment destruction.",
+    "distractors": {
+      "A": "Putting all environments in a single file increases risk of accidental production changes when editing dev.",
+      "C": "Local state files risk state corruption, race conditions, and lack audit history.",
+      "D": "Using a single backend without state locking creates race conditions and state file corruption during concurrent builds."
+    }
+  },
+  {
+    "id": "q65",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Compute Engine Rolling Updates & Health Checks",
+    "caseStudy": "General Architecture",
+    "question": "A web application runs on a Compute Engine Managed Instance Group (MIG). You need to deploy a new VM instance template without downtime. The update must replace instances in small batches, verify HTTP health checks before continuing, and automatically rollback if health checks fail. What MIG update strategy should be used?",
+    "options": [
+      "A. Immediate manual deletion of all VMs simultaneously",
+      "B. Automated Rolling Update with a proactive update policy, maxSurge, maxUnavailable, and auto-rollback enabled",
+      "C. Deploy new instances in a separate project and update DNS manually",
+      "D. Restart the physical host servers"
+    ],
+    "correctAnswer": "B",
+    "explanation": "MIG Rolling Updates automatically replace instances gradually based on `maxSurge` and `maxUnavailable` parameters, validating instance health checks before proceeding to ensure zero downtime and automated rollback.",
+    "distractors": {
+      "A": "Simultaneous manual deletion causes complete application outage.",
+      "C": "Manual DNS updates introduce slow propagation and manual operational risk.",
+      "D": "Host server restarts do not deploy new instance template software images."
+    }
+  },
+  {
+    "id": "q66",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "VPC Peering Routing Restrictions",
+    "caseStudy": "General Architecture",
+    "question": "VPC-A is peered with VPC-B. VPC-B is connected to an on-premises network via Cloud VPN. VMs in VPC-A cannot communicate with on-premises servers over the VPN connection. Why is this occurring and how should it be fixed?",
+    "options": [
+      "A. VPC Network Peering does NOT support transitive routing; fix by using Dedicated Interconnect or Cloud VPN directly to VPC-A, or using Network Connectivity Center / HA VPN hub",
+      "B. VPC Peering is disabled by default on weekends",
+      "C. Compute Engine firewall rules block ICMP ping requests",
+      "D. On-premises routers require BGP restart"
+    ],
+    "correctAnswer": "A",
+    "explanation": "VPC Network Peering is strictly non-transitive. Traffic from VPC-A cannot hop through VPC-B to reach a third network (on-premises VPN). To connect VPC-A to on-prem, you must establish a direct VPN/Interconnect, Shared VPC, or use Network Connectivity Center.",
+    "distractors": {
+      "A": "",
+      "B": "VPC Peering has no time-of-day restrictions.",
+      "C": "Firewall rules might block traffic, but non-transitive routing is the fundamental architectural cause of VPC Peering transit limits.",
+      "D": "Restarting BGP does not resolve VPC Peering's non-transitive routing constraint."
+    }
+  },
+  {
+    "id": "q67",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Custom Machine Types & Memory Configuration",
+    "caseStudy": "General Architecture",
+    "question": "An in-memory caching workload running on Compute Engine requires 12 vCPUs and 78 GB of RAM. Standard predefined machine types (e.g. `n2-standard-16`) provide more vCPUs than needed, incurring unnecessary vCPU licensing cost. How should you provision the VM?",
+    "options": [
+      "A. Provision a predefined `n2-standard-32` instance",
+      "B. Create a Custom Machine Type specifying exactly 12 vCPUs and 78 GB RAM",
+      "C. Attach 10 extra persistent disks to increase RAM",
+      "D. Run 5 separate small VMs"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Compute Engine Custom Machine Types allow you to tailor exact vCPU count and memory size to fit workload requirements, avoiding over-provisioning unused vCPU cores and saving cost.",
+    "distractors": {
+      "A": "Over-provisioning to `n2-standard-32` wastes money on 20 unused vCPU cores.",
+      "C": "Persistent disks provide block storage, not system RAM.",
+      "D": "Running multiple VMs adds distributed memory management complexity."
+    }
+  },
+  {
+    "id": "q68",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Artifact Registry Remote & Virtual Repositories",
+    "caseStudy": "General Architecture",
+    "question": "Your enterprise build pipelines pull third-party npm and Docker packages from public internet registries (Docker Hub, npmjs). You want to cache upstream packages locally in GCP, prevent builds from breaking if public registries experience outages, and scan external dependencies for vulnerabilities. What Artifact Registry feature should you configure?",
+    "options": [
+      "A. Standard Cloud Storage buckets",
+      "B. Remote Repositories and Virtual Repositories in Artifact Registry",
+      "C. Store package zip files in Cloud SQL",
+      "D. Public GitHub Gists"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Artifact Registry Remote Repositories act as proxy caches for upstream public registries (npm, Maven, Docker Hub), caching dependencies in GCP to ensure build reliability, security vulnerability scanning, and faster pull speeds.",
+    "distractors": {
+      "A": "Cloud Storage buckets lack npm/Docker native registry API integration.",
+      "C": "Cloud SQL is a relational database, not an artifact repository manager.",
+      "D": "GitHub Gists are public code snippet dumps, not enterprise artifact package proxies."
+    }
+  },
+  {
+    "id": "q69",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Automated Infrastructure Verification",
+    "caseStudy": "General Architecture",
+    "question": "Before deploying a Terraform pull request to production, your CI/CD pipeline must automatically run static code checks, validate resource syntax, and verify compliance rules (e.g., ensuring no public IP on DBs). Which combination of tools provides automated IaC linting and policy checking?",
+    "options": [
+      "A. `terraform validate`, `tflint`, and Google Cloud `gcloud beta terraform vet` / OPA (Open Policy Agent)",
+      "B. Manual code review via email",
+      "C. Run `terraform apply` directly in production to see if it succeeds",
+      "D. Execute bash echo statements in Cloud Build"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Integrating `terraform validate`, `tflint`, and policy enforcement tools like `gcloud beta terraform vet` or Open Policy Agent into CI/CD pipelines automatically catches syntax errors, misconfigurations, and security policy violations before applying changes.",
+    "distractors": {
+      "A": "",
+      "B": "Manual email reviews are slow and fail to catch syntax/policy bugs automatically.",
+      "C": "Applying untested changes directly in production risks catastrophic infrastructure outages.",
+      "D": "Simple echo statements do not validate Terraform syntax or security policies."
+    }
+  },
+  {
+    "id": "q70",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Private Google Access",
+    "caseStudy": "General Architecture",
+    "question": "Compute Engine instances in a private subnet have NO external IP addresses. They need to read and write data to BigQuery and Cloud Storage buckets using Google APIs (`storage.googleapis.com`) without sending traffic out over the public internet. What subnet setting must be enabled?",
+    "options": [
+      "A. Enable Private Google Access on the VPC subnet",
+      "B. Assign External IP addresses to all instances",
+      "C. Create a Cloud NAT gateway for public routing",
+      "D. Setup Cloud VPN over public internet"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Private Google Access allows instances in a VPC subnet with only internal IP addresses to reach Google APIs and services (Cloud Storage, BigQuery) over internal Google network routing.",
+    "distractors": {
+      "A": "",
+      "B": "Assigning external IPs violates the strict security requirement keeping instances private.",
+      "C": "Cloud NAT routes outbound traffic to the internet, whereas Private Google Access routes traffic internally to Google API endpoints.",
+      "D": "Cloud VPN connects on-premises networks, not internal VM-to-GCP service access."
+    }
+  },
+  {
+    "id": "q71",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "IaC Migration to Terraform",
+    "caseStudy": "General Architecture",
+    "question": "An enterprise has 200 existing Compute Engine instances created manually via the GCP Console. They want to bring these unmanaged resources under Terraform management without recreating or interrupting running VMs. What process should be executed?",
+    "options": [
+      "A. Delete all VMs and recreate them with `terraform apply`",
+      "B. Write Terraform configuration HCL blocks matching the resources and execute `terraform import` (or `terraform plan -generate-config-out`) to map resource IDs to state",
+      "C. Export GCP console HTML files",
+      "D. Use Cloud Functions to take daily VM disk snapshots"
+    ],
+    "correctAnswer": "B",
+    "explanation": "`terraform import` (and modern Terraform 1.5+ `import` blocks) binds existing real-world GCP infrastructure resources into Terraform state files without destroying or interrupting the live running resources.",
+    "distractors": {
+      "A": "Deleting running production VMs causes massive application downtime.",
+      "C": "HTML console files cannot be used by Terraform IaC engines.",
+      "D": "Snapshots back up disk contents, but do not import infrastructure definitions into IaC state."
+    }
+  },
+  {
+    "id": "q72",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Interconnect Provisioning Steps",
+    "caseStudy": "EHR Healthcare",
+    "question": "You are provisioning a Dedicated Interconnect link. You have ordered physical 10 Gbps ports in a co-location facility. What is the next logical step in GCP to establish private layer 3 BGP routing into your VPC?",
+    "options": [
+      "A. Create an Interconnect Attachment (VLAN attachment), associate it with a Cloud Router, and configure BGP peering sessions",
+      "B. Delete the VPC network",
+      "C. Install a local Wi-Fi router in the server room",
+      "D. Submit a billing ticket"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Establishing layer 3 connectivity over physical Dedicated Interconnect requires creating a VLAN Attachment (InterconnectAttachment), binding it to a Cloud Router, and configuring BGP peering sessions to exchange IP routes.",
+    "distractors": {
+      "A": "",
+      "B": "Deleting the VPC destroys all existing cloud infrastructure.",
+      "C": "Wi-Fi routers cannot establish 10 Gbps fiber optical BGP routing.",
+      "D": "Billing tickets do not configure networking software."
+    }
+  },
+  {
+    "id": "q73",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Cloud Router Route Advertisement",
+    "caseStudy": "General Architecture",
+    "question": "Your on-premises router connected via Cloud VPN needs to receive custom BGP route advertisements for Google Cloud internal IP ranges (`10.200.0.0/16`) and Private Google Access VIPs (`199.36.228.0/22`). How should you configure Cloud Router?",
+    "options": [
+      "A. Configure Custom Route Advertisements on the Cloud Router BGP session specifying the target CIDRs",
+      "B. Hardcode static routes on developer laptops",
+      "C. Use Cloud DNS Public Forwarding",
+      "D. Restart the Cloud VPN gateway"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Router supports Custom Route Advertisements, allowing network administrators to manually add specific subnets, custom CIDRs, or Google API VIP ranges to BGP routing announcements sent to on-premises routers.",
+    "distractors": {
+      "A": "",
+      "B": "Developer laptop static routes do not update enterprise on-premises network edge routers.",
+      "C": "DNS resolves domain names, not IP BGP route announcements.",
+      "D": "Restarting the VPN gateway does not inject custom subnet BGP routes."
+    }
+  },
+  {
+    "id": "q74",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "GKE Mode Selection (Autopilot vs Standard)",
+    "caseStudy": "General Architecture",
+    "question": "A team wants to deploy Kubernetes microservices on GKE. They want Google to manage node provisioning, node autoscaling, security hardening, and OS patching, while only paying for pod resource requests (vCPU/RAM) rather than underlying node capacity. Which GKE mode should be provisioned?",
+    "options": [
+      "A. GKE Standard mode",
+      "B. GKE Autopilot mode",
+      "C. Compute Engine standalone VMs",
+      "D. Bare Metal Solution"
+    ],
+    "correctAnswer": "B",
+    "explanation": "GKE Autopilot is a fully managed hands-off GKE operation mode where Google manages cluster infrastructure (nodes, pool scaling, OS patching) and users pay strictly for requested pod resources.",
+    "distractors": {
+      "A": "GKE Standard mode requires users to configure and pay for worker node pools and node OS maintenance.",
+      "C": "Standalone VMs require full manual OS, kernel, and Kubernetes cluster setup.",
+      "D": "Bare Metal Solution is for non-virtualized legacy hardware."
+    }
+  },
+  {
+    "id": "q75",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "VPC Flow Logs Configuration",
+    "caseStudy": "General Architecture",
+    "question": "Your security team needs to monitor network traffic metadata (source/destination IP, port, protocol, packet count) inside a VPC for network troubleshooting and threat analysis. You want to control logging storage cost. How should VPC Flow Logs be configured?",
+    "options": [
+      "A. Enable VPC Flow Logs on target subnets and adjust the Aggregation Interval and Sampling Rate (e.g., 50%) to balance visibility and log volume cost",
+      "B. Capture raw network packets using Wireshark on every VM instance continuously",
+      "C. Disable all network logging",
+      "D. Send network traffic over public HTTP"
+    ],
+    "correctAnswer": "A",
+    "explanation": "VPC Flow Logs record network flow metadata at the subnet level. Configuring sampling rates and aggregation intervals optimizes log volume and Cloud Logging storage costs while retaining network visibility.",
+    "distractors": {
+      "A": "",
+      "B": "Running Wireshark manually on all VMs consumes massive disk/CPU resources and fails to centralize flow analysis.",
+      "C": "Disabling logging leaves security teams blind to network attacks.",
+      "D": "Sending traffic over public HTTP does not generate VPC flow metadata logs."
+    }
+  },
+  {
+    "id": "q76",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "DNS Threat Blocking & RPZ",
+    "caseStudy": "General Architecture",
+    "question": "Your security architect wants to block infected internal VM instances from communicating with known malicious command-and-control (C2) domain names at the DNS resolution layer. What Cloud DNS feature provides this capability?",
+    "options": [
+      "A. Cloud DNS Response Policy Zones (RPZ)",
+      "B. Public DNS Forwarding",
+      "C. Cloud NAT Gateway",
+      "D. Cloud Storage Bucket Lock"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud DNS Response Policy Zones (RPZ) allow security teams to define custom DNS rules that intercept and block lookups for known malicious domains (returning NXDOMAIN or redirecting to a sinkhole IP).",
+    "distractors": {
+      "A": "",
+      "B": "Public forwarding routes lookups to external DNS servers without blocking malicious domains.",
+      "C": "Cloud NAT translates IP addresses, but does not inspect or filter DNS domain names.",
+      "D": "Bucket Lock manages GCS object retention."
+    }
+  },
+  {
+    "id": "q77",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Automated Golden VM Image Pipelines",
+    "caseStudy": "General Architecture",
+    "question": "Your company policy requires all Compute Engine VMs to be launched from pre-hardened 'golden' OS images containing security agents and vulnerability patches. How can you automate the building, scanning, and publishing of custom golden VM images every month?",
+    "options": [
+      "A. Manually launch a VM, install software via SSH, and take a manual snapshot",
+      "B. Use HashiCorp Packer integrated into a Cloud Build CI/CD pipeline to build, test, and publish custom Compute Engine images to a centralized Image Project",
+      "C. Write startup scripts that download untrusted zip files from public websites",
+      "D. Email virtual hard drive files to developers"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Using Packer automated image builders within Cloud Build CI/CD pipelines automates the creation of declarative, reproducible, tested golden Compute Engine images stored in a central shared project.",
+    "distractors": {
+      "A": "Manual SSH image creation is error-prone, non-reproducible, and lacks CI/CD audit trails.",
+      "C": "Downloading untrusted public zip files at VM startup introduces security risks and increases VM launch boot times.",
+      "D": "Emailing virtual disk files does not work for cloud infrastructure image management."
+    }
+  },
+  {
+    "id": "q78",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Redis Cluster Provisioning & HA",
+    "caseStudy": "General Architecture",
+    "question": "An e-commerce session caching service requires an in-memory Redis cluster with high availability, automatic failover across zones, and read replica scaling. Which GCP service should be provisioned?",
+    "options": [
+      "A. Cloud Memory-store for Redis (Standard Tier or Cluster Tier)",
+      "B. Compute Engine single instance running Redis open-source",
+      "C. Cloud Bigtable",
+      "D. Firestore in Datastore mode"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Memorystore for Redis (Standard / Cluster tier) provides a fully managed in-memory Redis service featuring cross-zone replication, automated failover, patch management, and read scaling.",
+    "distractors": {
+      "A": "",
+      "B": "Self-hosted single-instance Redis on Compute Engine lacks automated cross-zone failover, managed patching, and high availability SLA.",
+      "C": "Bigtable is a wide-column disk-backed NoSQL database, not an in-memory Redis sub-millisecond cache.",
+      "D": "Firestore is a document NoSQL database."
+    }
+  },
+  {
+    "id": "q79",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Infrastructure Refactoring & State Safety",
+    "caseStudy": "General Architecture",
+    "question": "You are refactoring a large Terraform configuration file. You need to rename a Cloud Storage bucket resource in your HCL code without causing Terraform to plan to delete the existing real-world bucket and recreate it. What Terraform block or command prevents resource deletion?",
+    "options": [
+      "A. `terraform destroy`",
+      "B. Use `moved {}` blocks in HCL code (or run `terraform state mv`)",
+      "C. Delete the terraform.tfstate file",
+      "D. Edit the GCP Console manually"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Terraform `moved {}` blocks (or `terraform state mv`) inform Terraform that a resource address was renamed, preserving state mapping and preventing destructive delete-and-recreate execution plans.",
+    "distractors": {
+      "A": "`terraform destroy` permanently deletes all infrastructure in the state file.",
+      "C": "Deleting state files causes Terraform to lose track of all existing infrastructure, leading to duplicate creation or conflicts.",
+      "D": "Editing GCP Console manually does not update Terraform state file mapping."
+    }
+  },
+  {
+    "id": "q80",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Multi-Cluster GKE Fleet Management",
+    "caseStudy": "General Architecture",
+    "question": "An enterprise manages 30 GKE clusters across multiple projects and regions. They want to manage cluster registration, enforce uniform IAM policy across all clusters, and group clusters logically into environments (`dev`, `prod`). What GCP feature should be used?",
+    "options": [
+      "A. GKE Fleets (Anthos Hub)",
+      "B. Cloud Build triggers",
+      "C. Single Shared VPC",
+      "D. Cloud DNS Zone Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "GKE Fleets (formerly Anthos Hub) allow organizations to logically group and manage fleets of Kubernetes clusters, enforcing uniform policies, multi-cluster service mesh, and centralized governance.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Build runs CI/CD pipelines, but does not provide GKE cluster fleet management abstractions.",
+      "C": "Shared VPC handles networking, not Kubernetes cluster fleet governance.",
+      "D": "Cloud DNS manages name resolution."
+    }
+  },
+  {
+    "id": "q81",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Internal Load Balancer Cross-Region Access",
+    "caseStudy": "General Architecture",
+    "question": "You have deployed an Internal Application Load Balancer in `us-central1`. Microservices in `us-east1` need to access this internal load balancer over private VPC IP addresses. What configuration on the Internal ALB allows cross-region client access?",
+    "options": [
+      "A. Enable Global Access on the Internal Application Load Balancer frontend",
+      "B. Assign public EIP addresses to internal microservices",
+      "C. Setup Cloud VPN between us-central1 and us-east1",
+      "D. Use Cloud Storage FUSE"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Enabling Global Access on an Internal Load Balancer allows client VMs located in any GCP region within the VPC network to reach the internal load balancer frontend IP address.",
+    "distractors": {
+      "A": "",
+      "B": "Assigning public IPs violates private internal microservice security policies.",
+      "C": "Cloud VPN is for hybrid on-prem connections; intra-VPC inter-region routing is native in GCP.",
+      "D": "Cloud Storage FUSE is a storage utility, unrelated to networking load balancers."
+    }
+  },
+  {
+    "id": "q82",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Automated SSL/TLS Certificate Provisioning",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail manages 50 domain names on their Global External Application Load Balancer. They want automated TLS certificate provisioning, auto-renewal before expiration, and zero manual private key handling. What GCP feature should be provisioned?",
+    "options": [
+      "A. Google-managed SSL Certificates attached to the Load Balancer target proxy",
+      "B. Purchase SSL certificates manually from third-party CAs and upload via email",
+      "C. Self-signed certificates generated on local developer laptops",
+      "D. Disable HTTPS and use HTTP only"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Google-managed SSL Certificates automatically provision, verify, and renew Domain Validated (DV) TLS certificates for Global Load Balancers without manual key handling or renewal tracking.",
+    "distractors": {
+      "A": "",
+      "B": "Manual third-party CA certificate purchases and uploads introduce operational toil and risk site outages upon certificate expiration.",
+      "C": "Self-signed certificates trigger browser untrusted security warnings for retail customers.",
+      "D": "HTTP exposes user passwords and credit cards in plain text, violating PCI-DSS."
+    }
+  },
+  {
+    "id": "q83",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Network Connectivity Center & SD-WAN",
+    "caseStudy": "General Architecture",
+    "question": "An enterprise wants to connect 100 remote retail branch offices using third-party SD-WAN router appliances to exchange BGP routes dynamically through GCP's global network backbone. What GCP networking resource manages SD-WAN router instances as spokes?",
+    "options": [
+      "A. Network Connectivity Center (NCC) Router Appliance Spokes",
+      "B. VPC Network Peering mesh",
+      "C. Cloud Storage Transfer Service",
+      "D. Shared VPC Service Projects"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Network Connectivity Center (NCC) Router Appliance spokes allow third-party SD-WAN network virtual appliances (NVAs) running in GCP to peer with Cloud Routers and exchange dynamic BGP routes across branch locations.",
+    "distractors": {
+      "A": "",
+      "B": "VPC Peering does not connect third-party SD-WAN branch appliances or support transitive BGP routing.",
+      "C": "Storage Transfer Service migrates data files, not network BGP packet routes.",
+      "D": "Shared VPC connects GCP project subnets, not external branch SD-WAN routers."
+    }
+  },
+  {
+    "id": "q84",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Continuous Change Data Capture Pipeline",
+    "caseStudy": "Altostrat Media",
+    "question": "Altostrat Media needs to replicate change data capture (CDC) updates from an operational Oracle database into BigQuery analytical tables in near real-time with serverless autoscaling. What GCP service pair should be provisioned?",
+    "options": [
+      "A. Datastream streaming CDC directly into BigQuery",
+      "B. Export Oracle database tables to CSV once per week via FTP",
+      "C. Run manual SQL INSERT statements on Compute Engine",
+      "D. Use Cloud Storage FUSE"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Datastream is a serverless Change Data Capture (CDC) and replication service that streams real-time data changes from Oracle and MySQL databases directly into BigQuery or Cloud Storage.",
+    "distractors": {
+      "A": "",
+      "B": "Weekly CSV FTP exports introduce high data latency and lack real-time CDC updates.",
+      "C": "Manual SQL inserts fail to scale or capture database transaction log changes automatically.",
+      "D": "Cloud Storage FUSE is a file system adapter, not a database CDC replication stream."
+    }
+  },
+  {
+    "id": "q133",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Terraform Infrastructure Provisioning & Module Design",
+    "caseStudy": "General Architecture",
+    "question": "Infrastructure Scenario 1: An enterprise provisions multi-project GCP environments using Terraform. They need to enforce standard firewall rules, VPC subnetting, and audit logging configurations across all projects. What IaC pattern ensures consistency?",
+    "options": [
+      "A. Create centralized versioned Terraform Modules hosted in a private Artifact Registry or Git repository",
+      "B. Write manual shell scripts with gcloud commands on developer machines",
+      "C. Deploy resources via GCP Console manually",
+      "D. Store infrastructure specs in Excel spreadsheets"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Using versioned, reusable Terraform modules stored in a private module registry ensures consistent infrastructure patterns across all environments.",
+    "distractors": {
+      "A": "",
+      "B": "Imperative shell scripts are hard to maintain and lack state management.",
+      "C": "Console provisioning leads to configuration drift.",
+      "D": "Excel spreadsheets cannot execute IaC plans."
+    }
+  },
+  {
+    "id": "q134",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Terraform Infrastructure Provisioning & Module Design",
+    "caseStudy": "General Architecture",
+    "question": "Infrastructure Scenario 2: An enterprise provisions multi-project GCP environments using Terraform. They need to enforce standard firewall rules, VPC subnetting, and audit logging configurations across all projects. What IaC pattern ensures consistency?",
+    "options": [
+      "A. Create centralized versioned Terraform Modules hosted in a private Artifact Registry or Git repository",
+      "B. Write manual shell scripts with gcloud commands on developer machines",
+      "C. Deploy resources via GCP Console manually",
+      "D. Store infrastructure specs in Excel spreadsheets"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Using versioned, reusable Terraform modules stored in a private module registry ensures consistent infrastructure patterns across all environments.",
+    "distractors": {
+      "A": "",
+      "B": "Imperative shell scripts are hard to maintain and lack state management.",
+      "C": "Console provisioning leads to configuration drift.",
+      "D": "Excel spreadsheets cannot execute IaC plans."
+    }
+  },
+  {
+    "id": "q135",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Terraform Infrastructure Provisioning & Module Design",
+    "caseStudy": "General Architecture",
+    "question": "Infrastructure Scenario 3: An enterprise provisions multi-project GCP environments using Terraform. They need to enforce standard firewall rules, VPC subnetting, and audit logging configurations across all projects. What IaC pattern ensures consistency?",
+    "options": [
+      "A. Create centralized versioned Terraform Modules hosted in a private Artifact Registry or Git repository",
+      "B. Write manual shell scripts with gcloud commands on developer machines",
+      "C. Deploy resources via GCP Console manually",
+      "D. Store infrastructure specs in Excel spreadsheets"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Using versioned, reusable Terraform modules stored in a private module registry ensures consistent infrastructure patterns across all environments.",
+    "distractors": {
+      "A": "",
+      "B": "Imperative shell scripts are hard to maintain and lack state management.",
+      "C": "Console provisioning leads to configuration drift.",
+      "D": "Excel spreadsheets cannot execute IaC plans."
+    }
+  },
+  {
+    "id": "q136",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Terraform Infrastructure Provisioning & Module Design",
+    "caseStudy": "General Architecture",
+    "question": "Infrastructure Scenario 4: An enterprise provisions multi-project GCP environments using Terraform. They need to enforce standard firewall rules, VPC subnetting, and audit logging configurations across all projects. What IaC pattern ensures consistency?",
+    "options": [
+      "A. Create centralized versioned Terraform Modules hosted in a private Artifact Registry or Git repository",
+      "B. Write manual shell scripts with gcloud commands on developer machines",
+      "C. Deploy resources via GCP Console manually",
+      "D. Store infrastructure specs in Excel spreadsheets"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Using versioned, reusable Terraform modules stored in a private module registry ensures consistent infrastructure patterns across all environments.",
+    "distractors": {
+      "A": "",
+      "B": "Imperative shell scripts are hard to maintain and lack state management.",
+      "C": "Console provisioning leads to configuration drift.",
+      "D": "Excel spreadsheets cannot execute IaC plans."
+    }
+  },
+  {
+    "id": "q137",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Terraform Infrastructure Provisioning & Module Design",
+    "caseStudy": "General Architecture",
+    "question": "Infrastructure Scenario 5: An enterprise provisions multi-project GCP environments using Terraform. They need to enforce standard firewall rules, VPC subnetting, and audit logging configurations across all projects. What IaC pattern ensures consistency?",
+    "options": [
+      "A. Create centralized versioned Terraform Modules hosted in a private Artifact Registry or Git repository",
+      "B. Write manual shell scripts with gcloud commands on developer machines",
+      "C. Deploy resources via GCP Console manually",
+      "D. Store infrastructure specs in Excel spreadsheets"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Using versioned, reusable Terraform modules stored in a private module registry ensures consistent infrastructure patterns across all environments.",
+    "distractors": {
+      "A": "",
+      "B": "Imperative shell scripts are hard to maintain and lack state management.",
+      "C": "Console provisioning leads to configuration drift.",
+      "D": "Excel spreadsheets cannot execute IaC plans."
+    }
+  },
+  {
+    "id": "q138",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Terraform Infrastructure Provisioning & Module Design",
+    "caseStudy": "General Architecture",
+    "question": "Infrastructure Scenario 6: An enterprise provisions multi-project GCP environments using Terraform. They need to enforce standard firewall rules, VPC subnetting, and audit logging configurations across all projects. What IaC pattern ensures consistency?",
+    "options": [
+      "A. Create centralized versioned Terraform Modules hosted in a private Artifact Registry or Git repository",
+      "B. Write manual shell scripts with gcloud commands on developer machines",
+      "C. Deploy resources via GCP Console manually",
+      "D. Store infrastructure specs in Excel spreadsheets"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Using versioned, reusable Terraform modules stored in a private module registry ensures consistent infrastructure patterns across all environments.",
+    "distractors": {
+      "A": "",
+      "B": "Imperative shell scripts are hard to maintain and lack state management.",
+      "C": "Console provisioning leads to configuration drift.",
+      "D": "Excel spreadsheets cannot execute IaC plans."
+    }
+  },
+  {
+    "id": "q139",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Terraform Infrastructure Provisioning & Module Design",
+    "caseStudy": "General Architecture",
+    "question": "Infrastructure Scenario 7: An enterprise provisions multi-project GCP environments using Terraform. They need to enforce standard firewall rules, VPC subnetting, and audit logging configurations across all projects. What IaC pattern ensures consistency?",
+    "options": [
+      "A. Create centralized versioned Terraform Modules hosted in a private Artifact Registry or Git repository",
+      "B. Write manual shell scripts with gcloud commands on developer machines",
+      "C. Deploy resources via GCP Console manually",
+      "D. Store infrastructure specs in Excel spreadsheets"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Using versioned, reusable Terraform modules stored in a private module registry ensures consistent infrastructure patterns across all environments.",
+    "distractors": {
+      "A": "",
+      "B": "Imperative shell scripts are hard to maintain and lack state management.",
+      "C": "Console provisioning leads to configuration drift.",
+      "D": "Excel spreadsheets cannot execute IaC plans."
+    }
+  },
+  {
+    "id": "q140",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Terraform Infrastructure Provisioning & Module Design",
+    "caseStudy": "General Architecture",
+    "question": "Infrastructure Scenario 8: An enterprise provisions multi-project GCP environments using Terraform. They need to enforce standard firewall rules, VPC subnetting, and audit logging configurations across all projects. What IaC pattern ensures consistency?",
+    "options": [
+      "A. Create centralized versioned Terraform Modules hosted in a private Artifact Registry or Git repository",
+      "B. Write manual shell scripts with gcloud commands on developer machines",
+      "C. Deploy resources via GCP Console manually",
+      "D. Store infrastructure specs in Excel spreadsheets"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Using versioned, reusable Terraform modules stored in a private module registry ensures consistent infrastructure patterns across all environments.",
+    "distractors": {
+      "A": "",
+      "B": "Imperative shell scripts are hard to maintain and lack state management.",
+      "C": "Console provisioning leads to configuration drift.",
+      "D": "Excel spreadsheets cannot execute IaC plans."
+    }
+  },
+  {
+    "id": "q141",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Terraform Infrastructure Provisioning & Module Design",
+    "caseStudy": "General Architecture",
+    "question": "Infrastructure Scenario 9: An enterprise provisions multi-project GCP environments using Terraform. They need to enforce standard firewall rules, VPC subnetting, and audit logging configurations across all projects. What IaC pattern ensures consistency?",
+    "options": [
+      "A. Create centralized versioned Terraform Modules hosted in a private Artifact Registry or Git repository",
+      "B. Write manual shell scripts with gcloud commands on developer machines",
+      "C. Deploy resources via GCP Console manually",
+      "D. Store infrastructure specs in Excel spreadsheets"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Using versioned, reusable Terraform modules stored in a private module registry ensures consistent infrastructure patterns across all environments.",
+    "distractors": {
+      "A": "",
+      "B": "Imperative shell scripts are hard to maintain and lack state management.",
+      "C": "Console provisioning leads to configuration drift.",
+      "D": "Excel spreadsheets cannot execute IaC plans."
+    }
+  },
+  {
+    "id": "q142",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Terraform Infrastructure Provisioning & Module Design",
+    "caseStudy": "General Architecture",
+    "question": "Infrastructure Scenario 10: An enterprise provisions multi-project GCP environments using Terraform. They need to enforce standard firewall rules, VPC subnetting, and audit logging configurations across all projects. What IaC pattern ensures consistency?",
+    "options": [
+      "A. Create centralized versioned Terraform Modules hosted in a private Artifact Registry or Git repository",
+      "B. Write manual shell scripts with gcloud commands on developer machines",
+      "C. Deploy resources via GCP Console manually",
+      "D. Store infrastructure specs in Excel spreadsheets"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Using versioned, reusable Terraform modules stored in a private module registry ensures consistent infrastructure patterns across all environments.",
+    "distractors": {
+      "A": "",
+      "B": "Imperative shell scripts are hard to maintain and lack state management.",
+      "C": "Console provisioning leads to configuration drift.",
+      "D": "Excel spreadsheets cannot execute IaC plans."
+    }
+  },
+  {
+    "id": "q143",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Terraform Infrastructure Provisioning & Module Design",
+    "caseStudy": "General Architecture",
+    "question": "Infrastructure Scenario 11: An enterprise provisions multi-project GCP environments using Terraform. They need to enforce standard firewall rules, VPC subnetting, and audit logging configurations across all projects. What IaC pattern ensures consistency?",
+    "options": [
+      "A. Create centralized versioned Terraform Modules hosted in a private Artifact Registry or Git repository",
+      "B. Write manual shell scripts with gcloud commands on developer machines",
+      "C. Deploy resources via GCP Console manually",
+      "D. Store infrastructure specs in Excel spreadsheets"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Using versioned, reusable Terraform modules stored in a private module registry ensures consistent infrastructure patterns across all environments.",
+    "distractors": {
+      "A": "",
+      "B": "Imperative shell scripts are hard to maintain and lack state management.",
+      "C": "Console provisioning leads to configuration drift.",
+      "D": "Excel spreadsheets cannot execute IaC plans."
+    }
+  },
+  {
+    "id": "q144",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Terraform Infrastructure Provisioning & Module Design",
+    "caseStudy": "General Architecture",
+    "question": "Infrastructure Scenario 12: An enterprise provisions multi-project GCP environments using Terraform. They need to enforce standard firewall rules, VPC subnetting, and audit logging configurations across all projects. What IaC pattern ensures consistency?",
+    "options": [
+      "A. Create centralized versioned Terraform Modules hosted in a private Artifact Registry or Git repository",
+      "B. Write manual shell scripts with gcloud commands on developer machines",
+      "C. Deploy resources via GCP Console manually",
+      "D. Store infrastructure specs in Excel spreadsheets"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Using versioned, reusable Terraform modules stored in a private module registry ensures consistent infrastructure patterns across all environments.",
+    "distractors": {
+      "A": "",
+      "B": "Imperative shell scripts are hard to maintain and lack state management.",
+      "C": "Console provisioning leads to configuration drift.",
+      "D": "Excel spreadsheets cannot execute IaC plans."
+    }
+  },
+  {
+    "id": "q145",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Terraform Infrastructure Provisioning & Module Design",
+    "caseStudy": "General Architecture",
+    "question": "Infrastructure Scenario 13: An enterprise provisions multi-project GCP environments using Terraform. They need to enforce standard firewall rules, VPC subnetting, and audit logging configurations across all projects. What IaC pattern ensures consistency?",
+    "options": [
+      "A. Create centralized versioned Terraform Modules hosted in a private Artifact Registry or Git repository",
+      "B. Write manual shell scripts with gcloud commands on developer machines",
+      "C. Deploy resources via GCP Console manually",
+      "D. Store infrastructure specs in Excel spreadsheets"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Using versioned, reusable Terraform modules stored in a private module registry ensures consistent infrastructure patterns across all environments.",
+    "distractors": {
+      "A": "",
+      "B": "Imperative shell scripts are hard to maintain and lack state management.",
+      "C": "Console provisioning leads to configuration drift.",
+      "D": "Excel spreadsheets cannot execute IaC plans."
+    }
+  },
+  {
+    "id": "q146",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Terraform Infrastructure Provisioning & Module Design",
+    "caseStudy": "General Architecture",
+    "question": "Infrastructure Scenario 14: An enterprise provisions multi-project GCP environments using Terraform. They need to enforce standard firewall rules, VPC subnetting, and audit logging configurations across all projects. What IaC pattern ensures consistency?",
+    "options": [
+      "A. Create centralized versioned Terraform Modules hosted in a private Artifact Registry or Git repository",
+      "B. Write manual shell scripts with gcloud commands on developer machines",
+      "C. Deploy resources via GCP Console manually",
+      "D. Store infrastructure specs in Excel spreadsheets"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Using versioned, reusable Terraform modules stored in a private module registry ensures consistent infrastructure patterns across all environments.",
+    "distractors": {
+      "A": "",
+      "B": "Imperative shell scripts are hard to maintain and lack state management.",
+      "C": "Console provisioning leads to configuration drift.",
+      "D": "Excel spreadsheets cannot execute IaC plans."
+    }
+  },
+  {
+    "id": "q147",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Terraform Infrastructure Provisioning & Module Design",
+    "caseStudy": "General Architecture",
+    "question": "Infrastructure Scenario 15: An enterprise provisions multi-project GCP environments using Terraform. They need to enforce standard firewall rules, VPC subnetting, and audit logging configurations across all projects. What IaC pattern ensures consistency?",
+    "options": [
+      "A. Create centralized versioned Terraform Modules hosted in a private Artifact Registry or Git repository",
+      "B. Write manual shell scripts with gcloud commands on developer machines",
+      "C. Deploy resources via GCP Console manually",
+      "D. Store infrastructure specs in Excel spreadsheets"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Using versioned, reusable Terraform modules stored in a private module registry ensures consistent infrastructure patterns across all environments.",
+    "distractors": {
+      "A": "",
+      "B": "Imperative shell scripts are hard to maintain and lack state management.",
+      "C": "Console provisioning leads to configuration drift.",
+      "D": "Excel spreadsheets cannot execute IaC plans."
+    }
+  },
+  {
+    "id": "q148",
+    "domain": "Domain 2: Managing and provisioning the cloud solution infrastructure",
+    "topic": "Terraform Infrastructure Provisioning & Module Design",
+    "caseStudy": "General Architecture",
+    "question": "Infrastructure Scenario 16: An enterprise provisions multi-project GCP environments using Terraform. They need to enforce standard firewall rules, VPC subnetting, and audit logging configurations across all projects. What IaC pattern ensures consistency?",
+    "options": [
+      "A. Create centralized versioned Terraform Modules hosted in a private Artifact Registry or Git repository",
+      "B. Write manual shell scripts with gcloud commands on developer machines",
+      "C. Deploy resources via GCP Console manually",
+      "D. Store infrastructure specs in Excel spreadsheets"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Using versioned, reusable Terraform modules stored in a private module registry ensures consistent infrastructure patterns across all environments.",
+    "distractors": {
+      "A": "",
+      "B": "Imperative shell scripts are hard to maintain and lack state management.",
+      "C": "Console provisioning leads to configuration drift.",
+      "D": "Excel spreadsheets cannot execute IaC plans."
+    }
+  }
+]

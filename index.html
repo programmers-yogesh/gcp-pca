@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GCP Professional Cloud Architect Exam Prep & Practice Suite</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme">
+
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-area">
+        <div class="gcp-badge">GCP PCA</div>
+        <div>
+          <h1>Professional Cloud Architect</h1>
+          <p class="subtitle">Exam Practice & Syllabus Mastery Kit (210 Scenario Questions)</p>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <button class="nav-tab-btn active" data-tab="tab-syllabus">📚 Syllabus & Domains</button>
+        <button class="nav-tab-btn" data-tab="tab-quiz">✏️ Practice Quiz</button>
+        <button class="nav-tab-btn" data-tab="tab-casestudies">🏢 Case Studies</button>
+        <button class="nav-tab-btn" data-tab="tab-cheatsheets">⚡ Decision Matrix</button>
+        <button id="theme-toggle-btn" class="theme-btn" title="Toggle Theme">☀️ Light</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="main-container">
+
+    <!-- TAB 1: SYLLABUS & DOMAINS -->
+    <section id="tab-syllabus" class="tab-content active">
+      <div class="banner">
+        <h2>Syllabus Breakdown (6 Domains - 210 Questions)</h2>
+        <p>The Google Cloud Certified Professional Cloud Architect exam evaluates your capability across six core technical domains. Filter questions or review domain weightages below.</p>
+      </div>
+
+      <div class="domain-grid">
+        <div class="domain-card" data-domain-id="1">
+          <div class="domain-header">
+            <span class="weightage">24%</span>
+            <h3>Domain 1: Designing & Planning Architecture</h3>
+          </div>
+          <p>Multi-region architecture, database selection (Spanner vs Bigtable), serverless vs container strategy, hybrid connectivity. (50 Questions)</p>
+          <button class="btn btn-secondary filter-domain-btn" data-domain-name="Domain 1: Designing and planning a cloud solution architecture">Practice Domain 1 Questions</button>
+        </div>
+
+        <div class="domain-card" data-domain-id="2">
+          <div class="domain-header">
+            <span class="weightage">21%</span>
+            <h3>Domain 2: Provisioning & Infrastructure</h3>
+          </div>
+          <p>Infrastructure as Code (Terraform state locking), Shared VPC setup, private connectivity, CI/CD pipelines. (45 Questions)</p>
+          <button class="btn btn-secondary filter-domain-btn" data-domain-name="Domain 2: Managing and provisioning the cloud solution infrastructure">Practice Domain 2 Questions</button>
+        </div>
+
+        <div class="domain-card" data-domain-id="3">
+          <div class="domain-header">
+            <span class="weightage">18%</span>
+            <h3>Domain 3: Security & Compliance</h3>
+          </div>
+          <p>Workload Identity, Identity-Aware Proxy (IAP), DLP API (Sensitive Data Protection), CMEK KMS keys, HIPAA/PCI compliance. (40 Questions)</p>
+          <button class="btn btn-secondary filter-domain-btn" data-domain-name="Domain 3: Designing for security and compliance">Practice Domain 3 Questions</button>
+        </div>
+
+        <div class="domain-card" data-domain-id="4">
+          <div class="domain-header">
+            <span class="weightage">18%</span>
+            <h3>Domain 4: Process Optimization & Cost</h3>
+          </div>
+          <p>BigQuery partitioning/clustering, Cloud Storage lifecycle management, Committed Use Discounts, migration strategies. (35 Questions)</p>
+          <button class="btn btn-secondary filter-domain-btn" data-domain-name="Domain 4: Analyzing and optimizing technical and business processes">Practice Domain 4 Questions</button>
+        </div>
+
+        <div class="domain-card" data-domain-id="5">
+          <div class="domain-header">
+            <span class="weightage">11%</span>
+            <h3>Domain 5: Managing Implementations</h3>
+          </div>
+          <p>Container migration to Cloud Run/GKE, API Gateways (Apigee), Database Migration Service (DMS), service mesh. (22 Questions)</p>
+          <button class="btn btn-secondary filter-domain-btn" data-domain-name="Domain 5: Managing implementations of cloud architecture">Practice Domain 5 Questions</button>
+        </div>
+
+        <div class="domain-card" data-domain-id="6">
+          <div class="domain-header">
+            <span class="weightage">8%</span>
+            <h3>Domain 6: Reliability & Operations</h3>
+          </div>
+          <p>Disaster recovery (Active-Active vs Warm/Cold standby), Error Budget Burn Rate alerts, Cloud Observability (Logging/Monitoring). (18 Questions)</p>
+          <button class="btn btn-secondary filter-domain-btn" data-domain-name="Domain 6: Ensuring solution and operations reliability">Practice Domain 6 Questions</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: PRACTICE QUIZ -->
+    <section id="tab-quiz" class="tab-content">
+      <div class="quiz-controls">
+        <div class="filters">
+          <label>Filter by Domain:</label>
+          <select id="domain-filter" class="select-input">
+            <option value="ALL">All Domains (Full 210-Question Syllabus)</option>
+            <option value="Domain 1: Designing and planning a cloud solution architecture">Domain 1: Design & Plan Architecture (50 Qs)</option>
+            <option value="Domain 2: Managing and provisioning the cloud solution infrastructure">Domain 2: Provisioning & Infrastructure (45 Qs)</option>
+            <option value="Domain 3: Designing for security and compliance">Domain 3: Security & Compliance (40 Qs)</option>
+            <option value="Domain 4: Analyzing and optimizing technical and business processes">Domain 4: Process Optimization & Cost (35 Qs)</option>
+            <option value="Domain 5: Managing implementations of cloud architecture">Domain 5: Managing Implementations (22 Qs)</option>
+            <option value="Domain 6: Ensuring solution and operations reliability">Domain 6: Reliability & Operations (18 Qs)</option>
+          </select>
+
+          <label>Mode:</label>
+          <select id="mode-filter" class="select-input">
+            <option value="PRACTICE">Practice Mode (Instant Feedback)</option>
+            <option value="EXAM">Timed Exam Mode (120 Mins & Scorecard)</option>
+          </select>
+
+          <label>Jump to Q:</label>
+          <select id="question-jump-select" class="select-input">
+            <!-- Populated dynamically by app.js -->
+          </select>
+        </div>
+
+        <div class="quiz-status">
+          <button id="btn-toggle-grid" class="btn btn-secondary btn-sm">🔢 Question Palette</button>
+          <span id="question-progress">Question 1 of 210</span>
+          <span id="exam-timer" class="timer-badge hidden">⏱ 120:00</span>
+        </div>
+      </div>
+
+      <!-- Interactive Question Palette Drawer -->
+      <div id="question-grid-palette" class="card question-palette hidden">
+        <div class="palette-header">
+          <h4>Question Palette Navigator</h4>
+          <span class="palette-legend">
+            <span class="legend-item"><span class="dot dot-unanswered"></span> Unanswered</span>
+            <span class="legend-item"><span class="dot dot-correct"></span> Correct</span>
+            <span class="legend-item"><span class="dot dot-incorrect"></span> Incorrect</span>
+            <span class="legend-item"><span class="dot dot-current"></span> Active</span>
+          </span>
+        </div>
+        <div id="palette-buttons-container" class="palette-buttons">
+          <!-- Numbered buttons rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Question Container -->
+      <div id="question-container" class="card question-card">
+        <div class="question-meta">
+          <span id="q-domain-badge" class="badge badge-domain">Domain 1</span>
+          <span id="q-case-badge" class="badge badge-case">Cymbal Retail</span>
+          <span id="q-topic-badge" class="badge badge-topic">Database Selection</span>
+        </div>
+
+        <h3 id="q-title" class="question-text">Question text loading...</h3>
+
+        <div id="options-list" class="options-container">
+          <!-- Options rendered dynamically -->
+        </div>
+
+        <div id="explanation-box" class="explanation-box hidden">
+          <h4>💡 Architectural Explanation & Rationale</h4>
+          <p id="exp-correct-text" class="exp-correct"></p>
+          <div id="exp-distractors-list" class="distractors-list"></div>
+        </div>
+
+        <div class="quiz-footer">
+          <button id="btn-prev" class="btn btn-secondary" disabled>← Previous</button>
+          <button id="btn-submit" class="btn btn-primary hidden">Check Answer</button>
+          <button id="btn-next" class="btn btn-primary">Next →</button>
+        </div>
+      </div>
+
+      <!-- Exam Results Summary Modal/Container -->
+      <div id="exam-results" class="card results-card hidden">
+        <h2>🎉 Exam Results & Performance Analysis</h2>
+        <div class="score-display">
+          <div class="score-circle">
+            <span id="score-percentage">0%</span>
+            <span class="score-subtext">Overall Score</span>
+          </div>
+          <div class="score-details">
+            <p><strong>Total Questions:</strong> <span id="res-total">0</span></p>
+            <p><strong>Correct Answers:</strong> <span id="res-correct" class="text-success">0</span></p>
+            <p><strong>Incorrect Answers:</strong> <span id="res-incorrect" class="text-danger">0</span></p>
+            <p><strong>Passing Score Target:</strong> 70%</p>
+            <p id="res-verdict" class="verdict-tag">PASS</p>
+          </div>
+        </div>
+        <button id="btn-restart" class="btn btn-primary">Restart Practice</button>
+      </div>
+    </section>
+
+    <!-- TAB 3: CASE STUDIES -->
+    <section id="tab-casestudies" class="tab-content">
+      <div class="banner">
+        <h2>Official GCP PCA Case Studies</h2>
+        <p>Case study questions represent 20–30% of the exam score. Below is the architectural breakdown and key design patterns for each official scenario.</p>
+      </div>
+
+      <div class="case-studies-accordion">
+        <div class="case-item card">
+          <div class="case-header">
+            <h3>🏢 Cymbal Retail</h3>
+            <span class="tag">E-Commerce & GenAI Modernization</span>
+          </div>
+          <div class="case-body">
+            <p><strong>Scenario:</strong> Traditional brick-and-mortar retailer scaling its online presence, handling massive holiday transaction surges, and introducing an AI shopping assistant.</p>
+            <ul>
+              <li><strong>Database Strategy:</strong> Cloud Spanner for global transactional consistency across regions; AlloyDB for high-throughput Postgres HTAP analytics.</li>
+              <li><strong>Generative AI:</strong> Vertex AI Vector Search + Gemini with RAG grounded on catalog data using Cosine vector distance metrics.</li>
+              <li><strong>Compute:</strong> Cloud Run for stateless containerized web frontends; Cloud Run Jobs for batch order processing.</li>
+              <li><strong>Security & API:</strong> Global External Application Load Balancer with Cloud Armor WAF and Apigee API Gateway.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="case-item card">
+          <div class="case-header">
+            <h3>🏥 EHR Healthcare</h3>
+            <span class="tag">HIPAA & High Availability Migration</span>
+          </div>
+          <div class="case-body">
+            <p><strong>Scenario:</strong> Healthcare SaaS provider migrating legacy colocation databases to GCP with strict HIPAA regulatory compliance and disaster recovery requirements.</p>
+            <ul>
+              <li><strong>Hybrid Connectivity:</strong> 10 Gbps Dedicated Interconnect with IPsec encryption.</li>
+              <li><strong>Security & Privacy:</strong> Sensitive Data Protection (DLP API) to redact PHI/PII; CMEK/CSEK via Cloud KMS/HSM.</li>
+              <li><strong>IAM:</strong> GKE Workload Identity & Cross-Cloud Workload Identity Federation.</li>
+              <li><strong>Compliance Retention:</strong> Cloud Storage Bucket Lock (WORM policy) for 7-year audit logs.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="case-item card">
+          <div class="case-header">
+            <h3>🎥 Altostrat Media</h3>
+            <span class="tag">Streaming Media & Petabyte Storage</span>
+          </div>
+          <div class="case-body">
+            <p><strong>Scenario:</strong> Global media platform processing raw video uploads, extracting metadata via AI, and managing multi-petabyte storage costs.</p>
+            <ul>
+              <li><strong>Storage Lifecycle & Replication:</strong> Cloud Storage Lifecycle Rules + Dual-Region Turbo Replication for 15-min RPO.</li>
+              <li><strong>Stream Processing:</strong> Pub/Sub → Cloud Dataflow → BigQuery with BI Engine acceleration.</li>
+              <li><strong>Analytics:</strong> BigQuery with Date Partitioning and Clustering on video tags.</li>
+              <li><strong>File Storage:</strong> Cloud Filestore Enterprise for NFS POSIX video rendering workloads.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="case-item card">
+          <div class="case-header">
+            <h3>🚗 KnightMotives Automotive</h3>
+            <span class="tag">Connected Vehicles & Low-Latency IoT</span>
+          </div>
+          <div class="case-body">
+            <p><strong>Scenario:</strong> Connected vehicle telemetry system collecting sensor data worldwide with near-zero RPO and RTO &lt; 1 min disaster recovery.</p>
+            <ul>
+              <li><strong>IoT Telemetry:</strong> Pub/Sub into Cloud Bigtable formatted with `[VEHICLE_ID]#[REVERSE_TIMESTAMP]` row keys.</li>
+              <li><strong>High Availability:</strong> Active-Active cross-region GKE clusters with Cloud Spanner multi-region.</li>
+              <li><strong>Edge Computing:</strong> Anthos / GKE Enterprise at regional manufacturing facilities.</li>
+              <li><strong>AI Defect Detection & Drift:</strong> Vertex AI Custom Training on GPUs + Vertex AI Model Monitoring for data drift detection.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: DECISION MATRIX -->
+    <section id="tab-cheatsheets" class="tab-content">
+      <div class="banner">
+        <h2>Expanded GCP Architectural Decision Matrices</h2>
+        <p>Comprehensive reference tables for instant architectural decision-making on the exam (69 Scenarios across 7 Domains).</p>
+      </div>
+
+      <div class="cheatsheet-grid">
+        <!-- Rendered dynamically by app.js from data/decision_matrices.json -->
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>Google Cloud Certified Professional Cloud Architect Study & Practice Application | 210 Scenario Questions & Decision Matrices</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

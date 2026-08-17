@@ -1,0 +1,1024 @@
+[
+  {
+    "id": "q1",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Global Database Selection & High Availability",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail wants to modernize its transactional database for its online store. The solution must support ACID transactions across multiple regions globally with horizontal scaling, sub-10ms read latency, and 99.999% availability. Which GCP database service should you recommend?",
+    "options": [
+      "A. Cloud SQL for PostgreSQL with read replicas in multiple regions",
+      "B. Cloud Spanner with a multi-region configuration",
+      "C. Cloud Bigtable with multi-cluster routing",
+      "D. Firestore in Datastore mode with multi-region location"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Cloud Spanner is Google Cloud's fully managed, enterprise-grade, globally distributed, and strongly consistent relational database service that provides 99.999% SLA for multi-region instances, handling seamless horizontal scaling while maintaining ACID compliance.",
+    "distractors": {
+      "A": "Cloud SQL does not scale write operations horizontally across multiple regions and only offers up to 99.95% SLA.",
+      "C": "Cloud Bigtable is a NoSQL wide-column store designed for high-throughput analytical/telemetry data, not strong ACID relational transactions.",
+      "D": "Firestore is a document NoSQL database; while high availability, Cloud Spanner is designed specifically for global relational transactional workloads with SQL support."
+    }
+  },
+  {
+    "id": "q2",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Hybrid Cloud & On-Premises Interconnect",
+    "caseStudy": "EHR Healthcare",
+    "question": "EHR Healthcare needs to securely connect its legacy on-premises patient database facility to Google Cloud with low latency, guaranteed bandwidth of 10 Gbps, and high security for HIPAA compliance. Public internet traversal is strictly prohibited. What is the recommended connectivity option?",
+    "options": [
+      "A. Cloud VPN with HA VPN configuration over public internet",
+      "B. Dedicated Interconnect with IPsec encryption",
+      "C. Partner Interconnect with 1 Gbps capacity",
+      "D. Carrier Peering with Direct Peering enabled"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Dedicated Interconnect provides direct physical connections between your on-premises network and Google's network with 10 Gbps or 100 Gbps pipes without traversing the public internet, satisfying high bandwidth and security compliance when combined with MACsec or IPsec.",
+    "distractors": {
+      "A": "Cloud VPN operates over the public internet, violating the strict requirement prohibiting public internet traversal.",
+      "C": "Partner Interconnect is used when your facility does not meet Google co-location facilities, and 1 Gbps does not fulfill the 10 Gbps requirement.",
+      "D": "Carrier Peering does not provide private RFC 1918 IP routing into VPCs directly and does not guarantee SLA equivalent to Dedicated Interconnect."
+    }
+  },
+  {
+    "id": "q9",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Streaming Data Architecture & Real-Time Analytics",
+    "caseStudy": "Altostrat Media",
+    "question": "Altostrat Media needs to process millions of real-time user clickstream events per second from global mobile apps, perform windowed aggregations, and stream transformed results into BigQuery for live dashboards. Which GCP native stream processing combo is recommended?",
+    "options": [
+      "A. Pub/Sub -> Cloud Dataflow (Apache Beam) -> BigQuery",
+      "B. Compute Engine VMs running Kafka -> Dataproc (Hadoop) -> Cloud Storage",
+      "C. Cloud Tasks -> Cloud Functions -> Cloud SQL",
+      "D. Cloud Eventarc -> Cloud Run -> Firestore"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Pub/Sub provides serverless, global real-time event ingestion. Cloud Dataflow (managed Apache Beam) processes stream windows with exactly-once processing guarantees and seamlessly streams output into BigQuery analytical storage.",
+    "distractors": {
+      "A": "",
+      "B": "Self-managing Kafka on VMs and Hadoop on Dataproc introduces heavy operational management overhead compared to native serverless Pub/Sub and Dataflow.",
+      "C": "Cloud Tasks is designed for asynchronous task execution rate limiting, not high-throughput stream processing.",
+      "D": "Eventarc and Cloud Run are event-driven execution models, but lack built-in stream windowing capabilities (tumbling/sliding windows) provided by Dataflow."
+    }
+  },
+  {
+    "id": "q14",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Generative AI Architecture & Vertex AI",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail wants to build an AI shopping assistant that uses proprietary catalog documents and real-time inventory databases to answer customer questions using Gemini models with zero hallucination. What is the recommended GCP architectural pattern?",
+    "options": [
+      "A. Train a custom LLM model from scratch on Compute Engine GPU instances",
+      "B. Retrieval-Augmented Generation (RAG) using Vertex AI Search & Conversation / Vector Search backed by Enterprise Search grounded on Cloud Storage & Enterprise APIs",
+      "C. Fine-tune open-source models using Dataflow and store weights in Cloud SQL",
+      "D. Send catalog documents inside prompt text to Cloud Translation API"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Retrieval-Augmented Generation (RAG) using Vertex AI Vector Search / Search & Conversation allows LLMs (like Gemini) to retrieve verified real-time enterprise context from private datasets before generating answers, avoiding model hallucinations and eliminating expensive model re-training.",
+    "distractors": {
+      "A": "Training custom LLMs from scratch costs millions of dollars, takes months, and fails to handle real-time updating inventory data easily.",
+      "C": "Fine-tuning updates static weights, but does not ground the model dynamically on changing inventory stock levels.",
+      "D": "Cloud Translation API translates text languages; it does not perform semantic vector search or conversational answer generation."
+    }
+  },
+  {
+    "id": "q20",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Bigtable Schema Design & Performance",
+    "caseStudy": "KnightMotives Automotive",
+    "question": "KnightMotives ingests millions of vehicle telemetry readings per second into Cloud Bigtable. Reads are failing due to severe write hotspotting on a single node tablet. The current row key design is `[TIMESTAMP]#[VEHICLE_ID]`. How should you redesign the row key?",
+    "options": [
+      "A. Change row key to `[SEQUENTIAL_ID]#[TIMESTAMP]`",
+      "B. Change row key to `[VEHICLE_ID]#[TIMESTAMP]` or `[HASHED_VEHICLE_ID]#[TIMESTAMP]`",
+      "C. Use a single static string row key for all writes",
+      "D. Store telemetry records as JSON blobs in Cloud SQL"
+    ],
+    "correctAnswer": "B",
+    "explanation": "In Bigtable, monotonically increasing row keys (like raw timestamp at the start) cause all incoming writes to hit a single node tablet (hotspotting). Leading with a high-cardinality ID (`VEHICLE_ID`) or hash evenly distributes writes across nodes.",
+    "distractors": {
+      "A": "Sequential IDs are monotonically increasing and cause identical write hotspotting issues as timestamps.",
+      "C": "A single static string routes 100% of traffic to a single tablet node, creating total bottlenecking.",
+      "D": "Cloud SQL cannot handle millions of writes per second like Bigtable wide-column storage."
+    }
+  },
+  {
+    "id": "q22",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Serverless Compute Selection",
+    "caseStudy": "General Architecture",
+    "question": "You are designing an application that receives file upload webhook events from Cloud Storage, resizes image assets, and writes metadata to Firestore. The execution time per event is under 30 seconds and calls occur unpredictably. What is the most cost-effective and low-maintenance compute engine?",
+    "options": [
+      "A. GKE Standard cluster with 3 dedicated worker nodes",
+      "B. Cloud Functions (2nd gen) / Cloud Run triggered by Eventarc",
+      "C. Compute Engine VM running Nginx and Node.js",
+      "D. Dataproc Spark Streaming cluster"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Cloud Functions (or Cloud Run) with Eventarc triggers provides event-driven serverless compute that runs code only when triggered, automatically scales to zero when idle, and charges per millisecond of execution time.",
+    "distractors": {
+      "A": "Dedicated GKE clusters incur 24/7 node compute charges regardless of idle traffic.",
+      "C": "Compute Engine VMs require OS maintenance, patching, and continuous running cost for unpredictable workloads.",
+      "D": "Dataproc clusters are designed for big data distributed processing, not lightweight event-driven image resizing."
+    }
+  },
+  {
+    "id": "q30",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "NoSQL Database Selection & Real-Time Sync",
+    "caseStudy": "General Architecture",
+    "question": "A mobile gaming application requires a document-oriented NoSQL database that provides real-time offline data synchronization for mobile clients, multi-region replication, and automatic scaling for millions of concurrent users. Which GCP database should be selected?",
+    "options": [
+      "A. Cloud SQL for MySQL",
+      "B. Firestore in Native Mode",
+      "C. Cloud Memory-store for Redis",
+      "D. Cloud Bigtable"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Firestore in Native Mode provides document NoSQL storage with native mobile SDKs supporting real-time data sync, offline data persistence, atomic transactions, and multi-region automatic scaling.",
+    "distractors": {
+      "A": "Cloud SQL is a relational database lacking native mobile client offline sync SDKs.",
+      "C": "Memorystore is an in-memory Redis cache, not a durable document database with mobile sync.",
+      "D": "Cloud Bigtable is designed for wide-column heavy analytical writes, lacking mobile SDK real-time sync listeners."
+    }
+  },
+  {
+    "id": "q37",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "AI Platform & Custom Model Deployment",
+    "caseStudy": "KnightMotives Automotive",
+    "question": "KnightMotives wants to train a custom computer vision model on custom PyTorch C++ extensions to analyze manufacturing plant defects. They need GPU acceleration and custom OS dependencies. Which Vertex AI compute option should they use?",
+    "options": [
+      "A. Vertex AI AutoML Vision",
+      "B. Vertex AI Custom Training with Custom Docker Containers on GPU nodes",
+      "C. BigQuery ML",
+      "D. Cloud Translation API"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Vertex AI Custom Training with Custom Containers allows developers to package custom framework dependencies (PyTorch C++ extensions) into Docker images and train on dedicated GPU/TPU hardware.",
+    "distractors": {
+      "A": "AutoML Vision is designed for standard image classification/detection without custom C++ frameworks or low-level model code modifications.",
+      "C": "BigQuery ML trains standard ML models directly using SQL queries, but does not support custom PyTorch C++ vision extensions.",
+      "D": "Cloud Translation API is a pre-trained API for text translation."
+    }
+  },
+  {
+    "id": "q38",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Load Balancer Architecture Selection",
+    "caseStudy": "General Architecture",
+    "question": "You need to route non-HTTP high-performance TCP traffic (port 9000) directly to backend Compute Engine instances with direct server return and pass-through client source IP preservation. Which load balancer should you choose?",
+    "options": [
+      "A. Global External Application Load Balancer (ALB)",
+      "B. Network Passthrough Load Balancer (Regional External NLB)",
+      "C. Internal HTTP/S Load Balancer",
+      "D. Cloud CDN"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Regional External Network Passthrough Load Balancers route non-HTTP TCP/UDP traffic directly to backend instances without proxying, preserving the client's source IP address and providing maximum throughput.",
+    "distractors": {
+      "A": "Application Load Balancer proxies HTTP/S (Layer 7) traffic and terminates client TCP connections.",
+      "C": "Internal HTTP/S Load Balancer is a Layer 7 proxy for private HTTP traffic.",
+      "D": "Cloud CDN caches static HTTP/S web content, not non-HTTP raw TCP traffic."
+    }
+  },
+  {
+    "id": "q41",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Event-Driven Microservices Integration",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail wants to trigger downstream inventory update services whenever a customer places a new order in Cloud Spanner. The solution must capture insert/update row mutations in real-time without modifying database application code. What feature should be enabled?",
+    "options": [
+      "A. Nightly cron jobs querying Cloud Spanner",
+      "B. Cloud Spanner Change Streams integrated with Cloud Dataflow / Pub/Sub",
+      "C. Export Cloud Spanner data to CSV files in Cloud Storage",
+      "D. Use Cloud SQL Federated Queries"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Cloud Spanner Change Streams output data modifications (inserts, updates, deletes) in real-time to downstream processing pipelines like Dataflow and Pub/Sub without affecting database transactional latency.",
+    "distractors": {
+      "A": "Nightly cron queries are delayed batch processes, failing real-time event-driven inventory updates.",
+      "C": "CSV exports are slow, manual, and lack real-time streaming capability.",
+      "D": "Federated queries allow BigQuery to query Cloud SQL, but do not stream event-driven database change events."
+    }
+  },
+  {
+    "id": "q49",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Task Scheduling vs Message Queues",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail sends order confirmation emails after purchase. To protect third-party email APIs from being overwhelmed, background task execution must be rate-limited to 10 requests/sec with scheduled delayed retries per task. Which GCP service should be selected?",
+    "options": [
+      "A. Cloud Pub/Sub",
+      "B. Cloud Tasks",
+      "C. Cloud Eventarc",
+      "D. Cloud Storage trigger"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Cloud Tasks is designed for asynchronous task management with fine-grained rate-limiting, dispatch rate controls, scheduled delivery time delays, and task-level retry policies (ideal for API rate-limiting).",
+    "distractors": {
+      "A": "Pub/Sub is a high-throughput publisher/subscriber event ingestion system, lacking per-queue rate-limiting (e.g. max 10 requests/sec) or scheduled task delay controls.",
+      "C": "Eventarc delivers events immediately to serverless targets without built-in queue rate throttling.",
+      "D": "Cloud Storage triggers fire on file uploads, not application background task scheduling."
+    }
+  },
+  {
+    "id": "q50",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Chaos Engineering & Reliability Validation",
+    "caseStudy": "General Architecture",
+    "question": "Before launching a critical application, your SRE team wants to validate that multi-region failover and autoscaling work seamlessly during zone failures by deliberately injecting network latency and killing worker pod instances in production. What reliability practice and tooling model does this represent?",
+    "options": [
+      "A. Load Testing via Locust",
+      "B. Chaos Engineering & Fault Injection (e.g. Chaos Mesh / Gremlin on GKE)",
+      "C. Static Code Analysis via SonarQube",
+      "D. Penetration Testing"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Chaos Engineering / Fault Injection testing intentionally introduces failures (zone outages, network latency, pod terminations) to validate application resilience, failover automation, and SLO alerting in real-world scenarios.",
+    "distractors": {
+      "A": "Load testing measures system performance under high traffic volume, but does not inject zone network failures or terminate worker nodes.",
+      "C": "Static Code Analysis checks source code quality and vulnerability patterns without executing infrastructure runtime failovers.",
+      "D": "Penetration Testing evaluates security vulnerabilities and exploitation vectors, not system fault tolerance."
+    }
+  },
+  {
+    "id": "q51",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Bigtable Replication & Global Availability",
+    "caseStudy": "KnightMotives Automotive",
+    "question": "KnightMotives requires continuous active-active write capability for vehicle telemetry in both US East and US West regions with eventual consistency and automatic failover. Which Cloud Bigtable cluster topology satisfies this requirement?",
+    "options": [
+      "A. Single-cluster Bigtable instance with read-only replicas",
+      "B. Multi-cluster Bigtable instance across two regions with Multi-Cluster Routing (eventual consistency)",
+      "C. Single-zone Bigtable with nightly snapshots",
+      "D. Deploy MySQL database instances behind Cloud Load Balancing"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Cloud Bigtable multi-cluster instances automatically replicate data asynchronously across regions. Multi-Cluster Routing directs traffic to the nearest available cluster, enabling continuous active-active reads and writes with instant failover.",
+    "distractors": {
+      "A": "Single-cluster Bigtable instances lack cross-region active-active write capabilities.",
+      "C": "Single-zone deployments have a single point of failure and fail regional availability requirements.",
+      "D": "MySQL does not support horizontal NoSQL write scaling across regions like Bigtable."
+    }
+  },
+  {
+    "id": "q52",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Relational Database Read Scaling",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail's marketing campaign increases reporting query traffic by 10x on their Cloud SQL for PostgreSQL database. Read performance degrades significantly, while write traffic remains steady. How should you scale read capacity with minimal architecture modification?",
+    "options": [
+      "A. Upgrade the primary Cloud SQL instance vCPUs",
+      "B. Create Cloud SQL Read Replicas and point analytics reporting tools to the read replica endpoints",
+      "C. Export database tables to Cloud Storage CSV files every hour",
+      "D. Convert Cloud SQL tables to Firestore documents"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Creating Cloud SQL Read Replicas offloads read-heavy query traffic from the primary instance without requiring data model redesign or upgrading primary write hardware.",
+    "distractors": {
+      "A": "Upgrading the primary vCPUs increases cost significantly and still leaves reporting queries competing with transactional write locks.",
+      "C": "Exporting CSV files creates data staleness and manual ETL management.",
+      "D": "Converting to Firestore requires rewriting SQL queries into NoSQL API calls."
+    }
+  },
+  {
+    "id": "q53",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Event-Driven Microservices Architecture",
+    "caseStudy": "General Architecture",
+    "question": "You are building a microservice architecture where Cloud Storage object uploads, Pub/Sub messages, and Cloud Audit Logs must asynchronously trigger containerized Cloud Run services. Which event delivery framework provides unified event routing using CloudEvents standards?",
+    "options": [
+      "A. Eventarc",
+      "B. Cloud Tasks",
+      "C. Cloud Composer",
+      "D. Deployment Manager"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Eventarc routes events from 90+ GCP sources (Cloud Storage, Audit Logs, Pub/Sub) to Cloud Run, GKE, or Cloud Functions using open CloudEvents standard formats.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Tasks handles rate-limited background task queues, not standardized multi-source event routing.",
+      "C": "Cloud Composer orchestrates batch Airflow DAG workflows.",
+      "D": "Deployment Manager is an Infrastructure as Code service."
+    }
+  },
+  {
+    "id": "q54",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Global Transactional Architecture",
+    "caseStudy": "General Architecture",
+    "question": "A financial banking platform requires a database that supports synchronous multi-region reads and writes with 99.999% availability SLA and zero data loss (RPO = 0) during regional disaster events. Which GCP database satisfies this strict requirement?",
+    "options": [
+      "A. Cloud SQL for MySQL with cross-region read replicas",
+      "B. Cloud Spanner with a Multi-Region Instance configuration",
+      "C. Cloud Bigtable with multi-cluster routing",
+      "D. Firestore in Single-Region mode"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Cloud Spanner multi-region instance configurations utilize Paxos consensus algorithms to provide synchronous cross-region replication, strong consistency, 99.999% SLA, and zero data loss (RPO = 0).",
+    "distractors": {
+      "A": "Cloud SQL cross-region replicas use asynchronous replication, which introduces non-zero data loss (RPO > 0) during regional failure.",
+      "C": "Cloud Bigtable uses eventual (asynchronous) cross-cluster replication.",
+      "D": "Single-region Firestore cannot survive a complete region outage."
+    }
+  },
+  {
+    "id": "q55",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Cloud Storage Location Selection",
+    "caseStudy": "Altostrat Media",
+    "question": "Altostrat Media streams high-definition media to users in compute engines located in us-east1 and us-central1. They want high-availability storage that automatically replicates objects between these two specific regions with optimal cost and low-latency access. Which bucket location type should be chosen?",
+    "options": [
+      "A. Single-Region bucket in us-west1",
+      "B. Custom Dual-Region bucket selecting us-east1 and us-central1",
+      "C. Multi-Region bucket set to eu (Europe)",
+      "D. Coldline single-region bucket"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Dual-Region Cloud Storage buckets allow you to pair two specific regions (e.g., us-east1 and us-central1), offering active-active replication, high availability, and lower latency than distant single regions.",
+    "distractors": {
+      "A": "us-west1 is a different region, adding cross-region egress latency.",
+      "C": "Selecting eu multi-region causes high transatlantic network latency for US compute engines.",
+      "D": "Coldline single-region bucket lacks multi-region availability and incurs high retrieval costs for streaming."
+    }
+  },
+  {
+    "id": "q56",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "API Gateway & Modernization",
+    "caseStudy": "General Architecture",
+    "question": "You need a lightweight, serverless API Gateway to authenticate and route API requests directly to Cloud Run services and Cloud Functions with OpenAPI v2/v3 spec validation and low operational overhead. Which GCP service is best suited?",
+    "options": [
+      "A. Apigee Enterprise",
+      "B. API Gateway",
+      "C. Cloud Armor",
+      "D. Cloud Interconnect"
+    ],
+    "correctAnswer": "B",
+    "explanation": "GCP API Gateway is a serverless gateway built on Envoy proxy that allows developers to secure and manage REST APIs for Cloud Run, Functions, and App Engine using OpenAPI specs with minimal setup.",
+    "distractors": {
+      "A": "Apigee is a comprehensive enterprise API management platform designed for complex SOAP transformations and monetization, which carries higher cost and complexity for simple serverless routing.",
+      "C": "Cloud Armor is a web application firewall (WAF), not an API routing gateway.",
+      "D": "Cloud Interconnect provides hybrid network connectivity."
+    }
+  },
+  {
+    "id": "q57",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Serverless Pipeline Architecture",
+    "caseStudy": "General Architecture",
+    "question": "An analytics startup needs an automated pipeline to ingest user activity payloads from web applications, buffer them globally, process them in real-time, and store results in an analytical warehouse. The entire pipeline must be 100% serverless and scale to zero. What is the architecture?",
+    "options": [
+      "A. Compute Engine VMs -> Kafka -> PostgreSQL",
+      "B. Cloud Pub/Sub -> Cloud Run / Dataflow -> BigQuery",
+      "C. Cloud Storage -> Cloud SQL -> Dataproc",
+      "D. Cloud VPN -> On-Premises Hadoop"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Pub/Sub (global message buffering), Dataflow or Cloud Run (real-time stream processing), and BigQuery (serverless data warehouse) form Google's standard 100% serverless streaming analytics stack.",
+    "distractors": {
+      "A": "Self-managed VMs and Kafka require dedicated infrastructure management and do not scale to zero.",
+      "C": "Cloud SQL lacks serverless data warehouse analytics scaling.",
+      "D": "On-premises Hadoop incurs heavy hardware and maintenance overhead."
+    }
+  },
+  {
+    "id": "q58",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Hybrid Topology & Transit Networking",
+    "caseStudy": "General Architecture",
+    "question": "An enterprise has 50 spoke VPCs across multiple GCP regions that need central routing access to on-premises networks and dedicated security inspection VPCs without managing hundreds of individual VPN/peering tunnels. Which GCP networking model acts as a managed hub-and-spoke router?",
+    "options": [
+      "A. VPC Network Peering mesh",
+      "B. Network Connectivity Center (NCC)",
+      "C. External Load Balancer",
+      "D. Cloud DNS Forwarding"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Network Connectivity Center (NCC) serves as Google Cloud's managed hub-and-spoke routing framework for connecting VPC networks, Cloud Interconnects, and SD-WAN branch devices into a single management plane.",
+    "distractors": {
+      "A": "VPC Peering does not support transitive routing and creates complex mesh scaling limits.",
+      "C": "Load Balancers manage traffic distribution to application servers, not enterprise network transit routing.",
+      "D": "Cloud DNS resolves domain names, not IP packet routing."
+    }
+  },
+  {
+    "id": "q59",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Multi-Tenant Cloud Organization Design",
+    "caseStudy": "General Architecture",
+    "question": "A SaaS provider hosts 200 distinct business clients on GCP. They require strict billing isolation, distinct IAM access controls, and independent quota allocations per client tenant. What GCP resource hierarchy model should be implemented?",
+    "options": [
+      "A. Deploy all client workloads inside a single GCP project using different subnets",
+      "B. Create a dedicated GCP Project per client tenant inside dedicated Folder structures under the Organization node",
+      "C. Use a single Compute Engine VM for all clients",
+      "D. Store all client data in one Cloud Storage bucket using prefixes"
+    ],
+    "correctAnswer": "B",
+    "explanation": "GCP Projects serve as the primary unit of billing, quota, IAM boundary, and resource isolation. Assigning a project per client tenant provides complete operational, security, and financial isolation.",
+    "distractors": {
+      "A": "Single project deployments share API quotas and billing budgets, risking noisy-neighbor quota exhaustion and security leakages.",
+      "C": "Single VM multi-tenancy lacks process and security isolation.",
+      "D": "Shared bucket storage risks data leakage and lacks per-tenant IAM quota enforcement."
+    }
+  },
+  {
+    "id": "q60",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Batch Processing Engine Selection",
+    "caseStudy": "Altostrat Media",
+    "question": "Altostrat Media needs to run nightly batch transformations on 50 TB of tabular log data stored in Cloud Storage. The job logic is expressed in standard SQL statements. What is the most cost-effective and zero-maintenance query engine to run this transformation?",
+    "options": [
+      "A. Spin up a Dataproc Hadoop cluster every night",
+      "B. Execute a BigQuery SQL query targeting external Cloud Storage tables or load into BigQuery",
+      "C. Run custom Python scripts on Compute Engine VMs",
+      "D. Process data using Cloud Memory-store"
+    ],
+    "correctAnswer": "B",
+    "explanation": "BigQuery can query external data directly or execute serverless SQL transformations without managing cluster infrastructure, offering maximum speed and lowest operational cost.",
+    "distractors": {
+      "A": "Spinning up Dataproc Hadoop clusters introduces cluster startup time, configuration management, and unnecessary compute overhead for standard SQL queries.",
+      "C": "Custom Python VM scripts are single-threaded or hard to scale across 50 TB of data compared to BigQuery parallel execution.",
+      "D": "Memorystore is an in-memory Redis cache with limited memory size."
+    }
+  },
+  {
+    "id": "q61",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Global Traffic Routing & Anycast",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail wants to route global web traffic to application instances in North America, Europe, and Asia. Users must automatically connect to the nearest healthy region with sub-second failover if a regional data center goes down. What load balancing architecture provides single global IP Anycast routing?",
+    "options": [
+      "A. Regional External Network Load Balancer in each region",
+      "B. Global External Application Load Balancer (HTTP/S)",
+      "C. Internal TCP Load Balancer with DNS round-robin",
+      "D. Cloud VPN with BGP route advertising"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Global External Application Load Balancers use Google's global Anycast IP infrastructure to route client requests to the nearest healthy backend region automatically, handling cross-region failover transparently.",
+    "distractors": {
+      "A": "Regional network load balancers require distinct regional IP addresses and DNS-based failover, which is slow and prone to DNS caching delays.",
+      "C": "Internal load balancers are private to VPCs and cannot accept public global internet traffic.",
+      "D": "Cloud VPN connects networks, not public web browser application traffic."
+    }
+  },
+  {
+    "id": "q62",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "ML Model Serving & Auto-scaling Architecture",
+    "caseStudy": "KnightMotives Automotive",
+    "question": "KnightMotives deploys machine learning model endpoints for real-time collision detection. Inferences must respond within 20ms under fluctuating traffic demand (from 10 to 50,000 requests/sec). How should they deploy model inference endpoints on GCP?",
+    "options": [
+      "A. Run model code inside Cloud SQL stored procedures",
+      "B. Deploy model to Vertex AI Endpoints with autoscaling node pools (vCPU/GPU)",
+      "C. Execute batch predictions using Dataproc once per hour",
+      "D. Save model output to static text files in Cloud Storage"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Vertex AI Endpoints provide managed microservice deployment for trained models with automatic traffic splitting, sub-20ms low latency, and horizontal autoscaling across CPU and GPU nodes.",
+    "distractors": {
+      "A": "Cloud SQL stored procedures are not designed for deep learning tensor matrix calculations or low-latency ML serving.",
+      "C": "Batch predictions take hours to run, failing the 20ms real-time collision detection requirement.",
+      "D": "Static text files cannot perform dynamic ML inference."
+    }
+  },
+  {
+    "id": "q63",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Service Mesh & Microservices Decoupling",
+    "caseStudy": "General Architecture",
+    "question": "An enterprise is modernizing a microservices application running on GKE. They want to implement traffic splitting (90% v1, 10% v2 canary), fault injection testing, and end-to-end mTLS encryption without modifying application source code. What architectural layer should be introduced?",
+    "options": [
+      "A. Service Mesh (Anthos Service Mesh / Istio)",
+      "B. Cloud DNS",
+      "C. Cloud Storage FUSE",
+      "D. Cloud NAT"
+    ],
+    "correctAnswer": "A",
+    "explanation": "A Service Mesh (such as Anthos Service Mesh / Istio) runs sidecar proxies alongside pods to handle Layer 7 traffic routing, canary releases, fault injection, and transparent mTLS security without application code changes.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud DNS resolves hostnames, but lacks Layer 7 microservice traffic splitting and mTLS sidecar injection.",
+      "C": "Cloud Storage FUSE is a file system adapter, unrelated to microservice networking.",
+      "D": "Cloud NAT manages outbound IP translation for private instances."
+    }
+  },
+  {
+    "id": "q108",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "AlloyDB for PostgreSQL Architecture",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail needs a PostgreSQL-compatible database for a high-volume transactional workload requiring 4x faster performance than standard Cloud SQL PostgreSQL, automated columnar engine indexing, and read pool horizontal scaling up to 20 nodes. Which GCP database service should be selected?",
+    "options": [
+      "A. Cloud SQL for PostgreSQL",
+      "B. AlloyDB for PostgreSQL",
+      "C. Cloud Spanner",
+      "D. Cloud Bigtable"
+    ],
+    "correctAnswer": "B",
+    "explanation": "AlloyDB for PostgreSQL is a fully managed PostgreSQL-compatible database designed for enterprise workloads, offering up to 4x faster performance than standard Cloud SQL for PostgreSQL, automated columnar acceleration, and read pool scaling.",
+    "distractors": {
+      "A": "Standard Cloud SQL for PostgreSQL does not scale read pools up to 20 nodes or provide AlloyDB columnar acceleration engine performance.",
+      "C": "Cloud Spanner uses Google SQL/PostgreSQL dialect, but is a global multi-region database with a different architecture and higher baseline cost.",
+      "D": "Cloud Bigtable is a wide-column NoSQL database, not PostgreSQL compatible."
+    }
+  },
+  {
+    "id": "q109",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Cloud Storage Turbo Replication & RPO",
+    "caseStudy": "Altostrat Media",
+    "question": "Altostrat Media requires a dual-region Cloud Storage configuration that provides a guaranteed 15-minute Recovery Point Objective (RPO) SLA for asynchronous cross-region object replication. Which Cloud Storage feature fulfills this strict SLA?",
+    "options": [
+      "A. Standard Dual-Region Replication",
+      "B. Dual-Region Bucket with Turbo Replication enabled",
+      "C. Multi-Region bucket set to Archive class",
+      "D. Storage Transfer Service running daily"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Turbo Replication for Cloud Storage Dual-Region buckets provides a service level agreement (SLA) replicating 100% of objects across paired regions within 15 minutes.",
+    "distractors": {
+      "A": "Standard Dual-Region replication replicates objects asynchronously without a guaranteed 15-minute RPO SLA.",
+      "C": "Archive class multi-region buckets do not provide a 15-minute Turbo Replication RPO SLA.",
+      "D": "Daily Storage Transfer Service runs introduce up to 24-hour RPO data staleness."
+    }
+  },
+  {
+    "id": "q110",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Bigtable Row Key Design for Time-Series",
+    "caseStudy": "KnightMotives Automotive",
+    "question": "KnightMotives ingests sensor data from 100,000 vehicles into Bigtable. Queries frequently filter by a specific Vehicle ID across a recent time range. How should the row key be formatted to optimize read latency and prevent hotspotting?",
+    "options": [
+      "A. `[TIMESTAMP]#[VEHICLE_ID]`",
+      "B. `[VEHICLE_ID]#[REVERSE_TIMESTAMP]`",
+      "C. `[SEQUENTIAL_ID]`",
+      "D. `[STATIC_PREFIX]`"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Formatting the row key as `[VEHICLE_ID]#[REVERSE_TIMESTAMP]` groups all records for a specific vehicle together while placing the newest timestamp records first, allowing ultra-fast sequential range scans without hitting a single tablet hotspot.",
+    "distractors": {
+      "A": "Leading with a raw timestamp causes all incoming writes to hit a single tablet node (write hotspotting).",
+      "C": "Sequential IDs cause monotonically increasing write hotspotting.",
+      "D": "Static prefixes force all cluster traffic to a single tablet node."
+    }
+  },
+  {
+    "id": "q111",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Vertex AI Vector Search & Distance Metrics",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail builds an e-commerce semantic product search tool using 768-dimensional text embeddings in Vertex AI Vector Search. They want to measure semantic directional similarity between normalized vector embeddings. Which distance metric should be specified in the index configuration?",
+    "options": [
+      "A. COSINE_DISTANCE or DOT_PRODUCT_DISTANCE",
+      "B. SQUARED_L2_DISTANCE only",
+      "C. Manhattan Distance",
+      "D. Hamming Distance"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cosine distance (or Dot Product distance for normalized vectors) measures the angular orientation and directional similarity between text embedding vectors, making it ideal for semantic search.",
+    "distractors": {
+      "A": "",
+      "B": "Squared L2 (Euclidean) distance measures absolute spatial distance rather than angular directional vector similarity.",
+      "C": "Manhattan distance is used for grid-based spatial distance calculations.",
+      "D": "Hamming distance is used for binary bitstring comparison."
+    }
+  },
+  {
+    "id": "q112",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Cross-Cloud Network Interconnect",
+    "caseStudy": "General Architecture",
+    "question": "An enterprise operating in both Google Cloud and Amazon Web Services (AWS) needs high-bandwidth, direct physical private network connectivity between their GCP VPC and AWS VPC without purchasing third-party co-location rack space. What GCP networking product provides direct multi-cloud provisioning?",
+    "options": [
+      "A. Dedicated Interconnect",
+      "B. Cross-Cloud Interconnect",
+      "C. Partner Interconnect",
+      "D. Cloud VPN"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Cross-Cloud Interconnect allows enterprises to provision direct 10 Gbps or 100 Gbps dedicated physical connections between Google Cloud and other cloud providers (AWS, Azure, Oracle) managed directly by Google.",
+    "distractors": {
+      "A": "Dedicated Interconnect connects GCP to customer on-premises co-location facilities, not cloud-to-cloud provider points of presence.",
+      "C": "Partner Interconnect relies on third-party service provider networks.",
+      "D": "Cloud VPN operates over public internet pipes with lower bandwidth and encryption overhead."
+    }
+  },
+  {
+    "id": "q113",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "App Engine vs Cloud Run Decision",
+    "caseStudy": "General Architecture",
+    "question": "A legacy team running a Java web app on App Engine Flexible environment wants to reduce billing costs during idle periods. App Engine Flex instances take 5 minutes to scale and cannot scale to zero. What compute target provides sub-second container cold starts and scales to zero when idle?",
+    "options": [
+      "A. App Engine Standard",
+      "B. Cloud Run",
+      "C. Compute Engine Instance Group",
+      "D. Bare Metal Solution"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Cloud Run runs stateless containerized applications with fast container startup times, sub-second auto-scaling, and full scale-to-zero capabilities, delivering lower cost than App Engine Flex.",
+    "distractors": {
+      "A": "App Engine Standard imposes runtime language version restrictions and lacks full custom Docker container flexibility.",
+      "C": "Compute Engine instance groups do not scale to zero when idle.",
+      "D": "Bare Metal Solution is for non-virtualized database workloads."
+    }
+  },
+  {
+    "id": "q114",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Firestore Mode Selection",
+    "caseStudy": "General Architecture",
+    "question": "An enterprise migrating a legacy application that relies on Cloud Datastore APIs wants to upgrade to Firestore storage performance while maintaining full backward compatibility with existing Datastore client libraries and index queries. Which mode should be selected?",
+    "options": [
+      "A. Firestore in Native Mode",
+      "B. Firestore in Datastore Mode",
+      "C. Cloud Bigtable",
+      "D. Cloud SQL"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Firestore in Datastore Mode uses Firestore storage layer performance while maintaining 100% backward compatibility with Cloud Datastore entity models, queries, and client libraries.",
+    "distractors": {
+      "A": "Firestore in Native Mode uses document/collection models and real-time listeners, which breaks legacy Datastore client code.",
+      "C": "Bigtable is a wide-column NoSQL store requiring complete rewrite.",
+      "D": "Cloud SQL is a relational SQL database."
+    }
+  },
+  {
+    "id": "q115",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Event-Driven Microservices with Eventarc v2",
+    "caseStudy": "General Architecture",
+    "question": "You need an event-driven system where creating a new object in Cloud Storage automatically triggers a Cloud Run service to process the file. The event delivery must support filtering by Cloud Storage bucket name and object prefix. Which service manages event routing?",
+    "options": [
+      "A. Eventarc",
+      "B. Cloud Scheduler",
+      "C. Cloud Tasks",
+      "D. Cloud Composer"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Eventarc routes events from Cloud Storage, Pub/Sub, and Cloud Audit Logs to Cloud Run services using standardized CloudEvents formats with fine-grained attribute filtering.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Scheduler triggers cron jobs on a timed schedule, not on file upload events.",
+      "C": "Cloud Tasks manages asynchronous task queues with rate limits.",
+      "D": "Cloud Composer orchestrates batch Airflow DAG workflows."
+    }
+  },
+  {
+    "id": "q116",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Global Load Balancing & Cloud CDN Caching",
+    "caseStudy": "Altostrat Media",
+    "question": "Altostrat Media streams video content globally. They want to cache static video segments at Google's global edge points of presence (PoPs) to reduce origin server load and improve video start times. What service integrates directly with the Global External Application Load Balancer?",
+    "options": [
+      "A. Cloud CDN",
+      "B. Cloud NAT",
+      "C. Cloud Armor",
+      "D. Cloud DNS"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud CDN leverages Google's global edge network to cache HTTP/S web content close to users, reducing origin server load and latency.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud NAT manages outbound IP translation for private instances.",
+      "C": "Cloud Armor is a web application firewall (WAF).",
+      "D": "Cloud DNS resolves domain names."
+    }
+  },
+  {
+    "id": "q117",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "GKE Pod Autoscaling Metrics",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail's order processing microservice on GKE scales based on the number of unread messages in a Cloud Pub/Sub queue rather than CPU or memory usage. How should the Horizontal Pod Autoscaler (HPA) be configured?",
+    "options": [
+      "A. Configure HPA using Custom / External Metrics via Stackdriver Custom Metrics Adapter (Cloud Monitoring)",
+      "B. Use Vertical Pod Autoscaler only",
+      "C. Configure Compute Engine MIG autoscaler",
+      "D. Disable HPA and scale manually"
+    ],
+    "correctAnswer": "A",
+    "explanation": "GKE Horizontal Pod Autoscaler (HPA) can scale pods based on external metrics (such as Pub/Sub queue depth) using the Cloud Monitoring Custom Metrics Adapter.",
+    "distractors": {
+      "A": "",
+      "B": "Vertical Pod Autoscaler adjusts CPU/RAM request sizes, not replica counts based on Pub/Sub queue length.",
+      "C": "MIG autoscalers scale GCE instances, not GKE pod replicas.",
+      "D": "Manual scaling fails under dynamic holiday traffic spikes."
+    }
+  },
+  {
+    "id": "q118",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Multi-Region Cloud Spanner Leader Placement",
+    "caseStudy": "General Architecture",
+    "question": "A global enterprise deploys Cloud Spanner across North America and Europe. Writes originate primarily from North America. How can Spanner configuration minimize write transaction commit latency?",
+    "options": [
+      "A. Set the Default Leader Region to a North American region (e.g., us-east4)",
+      "B. Move all read replicas to Asia",
+      "C. Disable Paxos consensus",
+      "D. Convert Spanner to single-zone MySQL"
+    ],
+    "correctAnswer": "A",
+    "explanation": "In multi-region Cloud Spanner, setting the default leader region close to where write traffic originates reduces Paxos round-trip latency during write transaction commits.",
+    "distractors": {
+      "A": "",
+      "B": "Moving read replicas to Asia increases latency for US/EU clients.",
+      "C": "Paxos consensus cannot be disabled in Cloud Spanner.",
+      "D": "Converting to single-zone MySQL loses global multi-region availability."
+    }
+  },
+  {
+    "id": "q119",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Shared VPC Subnet IP Planning",
+    "caseStudy": "General Architecture",
+    "question": "An organization is setting up a Shared VPC. They have 10 Service Projects deploying GKE clusters. What IP address allocation best practice prevents running out of IP space for Kubernetes pods and services?",
+    "options": [
+      "A. Allocate large secondary IP ranges (Alias IPs) for Pods and Services on each shared subnet",
+      "B. Assign /32 IP addresses to all subnets",
+      "C. Use public IPv4 addresses for pod IPs",
+      "D. Disable VPC subnets"
+    ],
+    "correctAnswer": "A",
+    "explanation": "GKE clusters in Shared VPC require secondary IP ranges (Alias IPs) on subnets for pods and services to enable native VPC container routing and avoid IP exhaustion.",
+    "distractors": {
+      "A": "",
+      "B": "/32 subnets provide only 1 IP address, failing pod network requirements.",
+      "C": "Using public IPs for pods exhausts expensive public IP space and exposes pods directly.",
+      "D": "Disabling subnets breaks VPC networking."
+    }
+  },
+  {
+    "id": "q120",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Cloud Tasks Rate Throttling Architecture",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail calls a legacy inventory ERP API that crashes if it receives more than 50 requests per second. How should Cymbal Retail architect its order processing pipeline to enforce strict rate limits when calling the ERP system?",
+    "options": [
+      "A. Publish orders to Cloud Tasks queue configured with max_dispatches_per_second = 50",
+      "B. Send orders directly via HTTP GET requests from 100 GKE pods concurrently",
+      "C. Use Pub/Sub without subscription rate limits",
+      "D. Write order files to Cloud Storage"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Tasks allows defining queues with strict max_dispatches_per_second parameters to buffer and rate-limit HTTP dispatch calls to downstream legacy APIs.",
+    "distractors": {
+      "A": "",
+      "B": "Direct HTTP GET calls from 100 pods will overwhelm and crash the legacy ERP system.",
+      "C": "Pub/Sub delivers messages as fast as possible without per-queue HTTP dispatch rate caps.",
+      "D": "Writing files to Cloud Storage does not execute rate-limited HTTP API calls."
+    }
+  },
+  {
+    "id": "q121",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Dataproc Serverless vs Dataproc Clusters",
+    "caseStudy": "Altostrat Media",
+    "question": "Altostrat Media processes daily PySpark jobs. Jobs run for 30 minutes at midnight. They want to avoid paying for running cluster master/worker nodes when no jobs are running. What is the most cost-effective architecture?",
+    "options": [
+      "A. Use Dataproc Serverless for Spark",
+      "B. Keep a 10-node Dataproc cluster running 24/7",
+      "C. Deploy Spark on Compute Engine standalone VMs",
+      "D. Process logs in Firestore"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Dataproc Serverless runs Spark workloads on-demand, automatically provisioning compute for the job duration and scaling to zero upon completion.",
+    "distractors": {
+      "A": "",
+      "B": "Running a 24/7 cluster wastes money for 23.5 hours of idle time every day.",
+      "C": "Standalone VMs require manual cluster management and startup/shutdown scripts.",
+      "D": "Firestore is a NoSQL document database, not a distributed Spark query engine."
+    }
+  },
+  {
+    "id": "q122",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "VPC Service Controls Perimeter Architecture",
+    "caseStudy": "EHR Healthcare",
+    "question": "EHR Healthcare wants to allow a specific Cloud Build service account in Project-A to write data to a Cloud Storage bucket inside a protected VPC Service Controls perimeter in Project-B. How should this cross-perimeter access be granted?",
+    "options": [
+      "A. Configure a VPC Service Controls Ingress Rule allowing Project-A service account access to Project-B GCS resources",
+      "B. Disable VPC Service Controls completely",
+      "C. Make the GCS bucket publicly readable",
+      "D. Delete Project-A"
+    ],
+    "correctAnswer": "A",
+    "explanation": "VPC Service Controls Ingress/Egress rules allow administrators to define secure, explicit policy exceptions for specific service accounts across service perimeters.",
+    "distractors": {
+      "A": "",
+      "B": "Disabling VPC Service Controls removes data exfiltration protection across the entire organization.",
+      "C": "Making buckets public exposes sensitive health data to the world.",
+      "D": "Deleting Project-A destroys application build infrastructure."
+    }
+  },
+  {
+    "id": "q123",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Microservices Resiliency & Circuit Breakers",
+    "caseStudy": "General Architecture",
+    "question": "An application consists of 20 microservices. If Service-B experiences high latency, upstream Service-A becomes overloaded waiting for connections, leading to cascading system failure. What architectural design pattern prevents cascading failures?",
+    "options": [
+      "A. Circuit Breaker Pattern (enforced via Istio / Anthos Service Mesh)",
+      "B. Deploying all microservices into a single executable binary",
+      "C. Increasing database connection timeouts to 10 hours",
+      "D. Disabling health checks"
+    ],
+    "correctAnswer": "A",
+    "explanation": "The Circuit Breaker pattern (implemented in Istio/ASM sidecar proxies) automatically trips and returns fast errors when a downstream service degrades, preventing connection pool exhaustion and cascading system outages.",
+    "distractors": {
+      "A": "",
+      "B": "Rebuilding as a single monolith destroys microservice deployment flexibility.",
+      "C": "Long connection timeouts worsen thread pool exhaustion.",
+      "D": "Disabling health checks prevents automated failover of unhealthy pods."
+    }
+  },
+  {
+    "id": "q124",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Compute Engine Sole-Tenant Node Affinity",
+    "caseStudy": "General Architecture",
+    "question": "An enterprise provisions Sole-Tenant Nodes on Compute Engine for strict software licensing compliance. They want new VM instances launched by a Managed Instance Group to automatically schedule onto these dedicated sole-tenant nodes. What setting must be configured on the VM instance template?",
+    "options": [
+      "A. Node Affinity Labels targeting the Sole-Tenant node group",
+      "B. Shielded VM bootloader settings",
+      "C. Enable Preemptible VM flag",
+      "D. Public IP assignment"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Configuring Node Affinity labels on VM instance templates instructs the Compute Engine scheduler to place instances exclusively on designated Sole-Tenant node groups.",
+    "distractors": {
+      "A": "",
+      "B": "Shielded VM settings manage secure boot, not sole-tenant scheduling.",
+      "C": "Preemptible VMs are short-lived discounted instances.",
+      "D": "Public IPs manage external networking."
+    }
+  },
+  {
+    "id": "q125",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Cloud Composer DAG Performance",
+    "caseStudy": "General Architecture",
+    "question": "A Cloud Composer (Apache Airflow) environment experiences slow DAG execution because tasks are queued waiting for available worker slots. How should the Cloud Composer architecture be scaled?",
+    "options": [
+      "A. Increase the minimum number of worker nodes and adjust worker.concurrency in Composer environment configuration",
+      "B. Upgrade the Cloud Storage bucket location to Archive class",
+      "C. Delete Airflow web server logs",
+      "D. Run DAGs on local laptops"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Scaling Cloud Composer worker instances and tuning worker.concurrency increases available task execution slots, eliminating worker queuing bottlenecks.",
+    "distractors": {
+      "A": "",
+      "B": "Archive storage class is for cold data archiving, not Airflow worker execution.",
+      "C": "Deleting logs does not scale Celery/Kubernetes worker execution slots.",
+      "D": "Local laptops cannot run enterprise data pipelines."
+    }
+  },
+  {
+    "id": "q126",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "AlloyDB Columnar Acceleration Engine",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail uses AlloyDB for PostgreSQL. Analytical SQL reporting queries scanning millions of rows take 10 seconds. How does AlloyDB accelerate hybrid transactional and analytical processing (HTAP) automatically?",
+    "options": [
+      "A. Using the built-in AlloyDB Columnar Engine which automatically keeps frequently queried data in in-memory columnar format",
+      "B. Converting data to CSV files in Cloud Storage",
+      "C. Running manual Spark jobs",
+      "D. Disabling database indexes"
+    ],
+    "correctAnswer": "A",
+    "explanation": "AlloyDB's Columnar Engine uses machine learning to automatically track query patterns and project relational row data into an in-memory columnar format for fast analytical queries.",
+    "distractors": {
+      "A": "",
+      "B": "Exporting CSV files creates data staleness and manual ETL management.",
+      "C": "Spark jobs require managing separate compute cluster infrastructure.",
+      "D": "Disabling indexes degrades query performance."
+    }
+  },
+  {
+    "id": "q127",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Vertex AI Model Monitoring & Drift Detection",
+    "caseStudy": "KnightMotives Automotive",
+    "question": "KnightMotives deployed a machine learning model for autonomous vehicle object classification. Over 6 months, prediction accuracy degrades due to shifting camera sensor hardware baseline distributions. What Vertex AI service detects feature attribution and data drift?",
+    "options": [
+      "A. Vertex AI Model Monitoring",
+      "B. Cloud Logging Log Sinks",
+      "C. Cloud Armor",
+      "D. Cloud NAT"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Vertex AI Model Monitoring automatically monitors deployed endpoint predictions for feature skew and data drift relative to training baseline datasets.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud Logging records raw log statements, but does not perform statistical ML data drift calculations.",
+      "C": "Cloud Armor is a web application firewall.",
+      "D": "Cloud NAT handles network address translation."
+    }
+  },
+  {
+    "id": "q128",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "GKE Enterprise Fleet Service Mesh Routing",
+    "caseStudy": "General Architecture",
+    "question": "An enterprise runs GKE Enterprise fleets across 5 regions. They need multi-cluster failover routing where if a service in us-east1 fails, requests are automatically routed to the nearest healthy service in us-central1 with mutual TLS. What feature enables cross-cluster service mesh routing?",
+    "options": [
+      "A. Anthos Service Mesh (ASM) Multi-Cluster Service Mesh",
+      "B. Standalone Cloud DNS Private Zones",
+      "C. VPC Network Peering without ASM",
+      "D. Cloud NAT Gateway"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Anthos Service Mesh (ASM) provides multi-cluster service discovery, global load balancing, and transparent mTLS encryption across GKE fleets in different regions.",
+    "distractors": {
+      "A": "",
+      "B": "Cloud DNS resolves hostnames, but lacks Layer 7 sidecar proxy failover and mTLS encryption.",
+      "C": "VPC Peering connects IP subnets, but lacks microservice mesh routing capabilities.",
+      "D": "Cloud NAT manages outbound IP translation."
+    }
+  },
+  {
+    "id": "q129",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Network Connectivity Center Spoke Design",
+    "caseStudy": "General Architecture",
+    "question": "An enterprise wants to connect 20 regional data centers using third-party SD-WAN virtual appliances running on Compute Engine VMs to route BGP traffic through Google's backbone. What Network Connectivity Center (NCC) resource type represents the VM virtual appliances?",
+    "options": [
+      "A. Router Appliance Spokes",
+      "B. VPC Spokes",
+      "C. VPN Spokes",
+      "D. Interconnect Spokes"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Network Connectivity Center (NCC) Router Appliance spokes bind third-party SD-WAN router VM instances into the NCC hub for dynamic BGP route exchange.",
+    "distractors": {
+      "A": "",
+      "B": "VPC spokes bind VPC networks directly.",
+      "C": "VPN spokes bind Cloud VPN tunnels.",
+      "D": "Interconnect spokes bind VLAN attachments."
+    }
+  },
+  {
+    "id": "q130",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Cloud Run Custom Domain SSL Provisioning",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail maps a custom domain (shop.cymbal.com) to a serverless Cloud Run service. How are TLS/SSL certificates managed for the custom domain?",
+    "options": [
+      "A. Cloud Run automatically provisions and renews Google-managed SSL certificates for mapped custom domains",
+      "B. Developers must manually purchase and upload SSL private keys every 90 days",
+      "C. SSL is not supported on Cloud Run custom domains",
+      "D. Certificates must be stored on local developer laptops"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Run automatically provisions, manages, and renews Domain Validated (DV) TLS certificates when custom domains are mapped to services.",
+    "distractors": {
+      "A": "",
+      "B": "Manual SSL purchases and uploads introduce operational toil and outage risks.",
+      "C": "Cloud Run fully supports custom domain TLS certificates.",
+      "D": "Local laptop certificates cannot terminate cloud web traffic."
+    }
+  },
+  {
+    "id": "q131",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Bigtable Garbage Collection Policies",
+    "caseStudy": "KnightMotives Automotive",
+    "question": "KnightMotives stores sensor telemetry in Bigtable. To control storage cost, they only need to keep the latest 5 versions of data for any given cell, or data modified within the last 30 days. How should this retention rule be configured in Bigtable?",
+    "options": [
+      "A. Configure Bigtable Column Family Garbage Collection Policies (max versions or max age)",
+      "B. Run nightly SQL DELETE statements",
+      "C. Export Bigtable data to Cloud Storage CSV files and delete the cluster",
+      "D. Use Cloud Storage Lifecycle Rules"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Bigtable Column Family Garbage Collection policies automatically purge expired cell versions based on maximum version count or maximum age conditions.",
+    "distractors": {
+      "A": "",
+      "B": "Bigtable does not execute SQL DELETE statements; garbage collection is configured via column family rules.",
+      "C": "Deleting clusters destroys active telemetry ingestion.",
+      "D": "Cloud Storage rules manage object buckets, not Bigtable table cells."
+    }
+  },
+  {
+    "id": "q132",
+    "domain": "Domain 1: Designing and planning a cloud solution architecture",
+    "topic": "Google Cloud Architecture Framework Pillars",
+    "caseStudy": "General Architecture",
+    "question": "When designing an enterprise cloud solution on GCP, an architect prioritizes Operational Excellence, Security/Privacy/Compliance, Reliability, Performance Optimization, Cost Optimization, and Sustainability. What official Google guidelines outline these design pillars?",
+    "options": [
+      "A. Google Cloud Architecture Framework (Well-Architected)",
+      "B. PCI-DSS Compliance Manual",
+      "C. Compute Engine VM Startup Docs",
+      "D. Linux Kernel Man Pages"
+    ],
+    "correctAnswer": "A",
+    "explanation": "The Google Cloud Architecture Framework defines the 6 core pillars for designing robust, secure, efficient, and cost-effective cloud solutions on GCP.",
+    "distractors": {
+      "A": "",
+      "B": "PCI-DSS is a payment card standard, not GCP's full architecture framework.",
+      "C": "VM startup docs cover VM script initialization.",
+      "D": "Linux man pages cover OS commands."
+    }
+  }
+]

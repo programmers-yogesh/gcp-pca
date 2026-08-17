@@ -1,0 +1,397 @@
+{
+  "computeMatrix": [
+    {
+      "requirement": "Stateless HTTP web services / microservices, zero ops",
+      "recommended": "Cloud Run",
+      "scaling": "Instant auto-scale to zero (Per-millisecond billing)",
+      "tradeoff": "Max 60-min execution limit per HTTP request"
+    },
+    {
+      "requirement": "Batch jobs / data processing scripts (non-HTTP)",
+      "recommended": "Cloud Run Jobs",
+      "scaling": "Executes tasks to completion then stops",
+      "tradeoff": "Requires containerized task script"
+    },
+    {
+      "requirement": "Managed Kubernetes microservices without node management",
+      "recommended": "GKE Autopilot",
+      "scaling": "Automatic Pod & Node Autoscaling",
+      "tradeoff": "Pay per requested pod vCPU/RAM (No direct node SSH/tuning)"
+    },
+    {
+      "requirement": "Custom K8s C++ plugins, hardware GPUs, full cluster control",
+      "recommended": "GKE Standard",
+      "scaling": "HPA + Cluster Autoscaler",
+      "tradeoff": "Requires node pool provisioning, OS maintenance & upgrades"
+    },
+    {
+      "requirement": "Multi-cluster enterprise fleet governance & service mesh",
+      "recommended": "GKE Enterprise (Anthos)",
+      "scaling": "Multi-cluster Fleet Management",
+      "tradeoff": "Higher enterprise license subscription cost"
+    },
+    {
+      "requirement": "Event-driven single-purpose background functions",
+      "recommended": "Cloud Functions (2nd Gen)",
+      "scaling": "Event-driven auto-scale to zero",
+      "tradeoff": "Triggered via Eventarc / Pub/Sub / GCS events"
+    },
+    {
+      "requirement": "Monolith VM, custom OS kernel, legacy BYOL license",
+      "recommended": "Compute Engine VMs",
+      "scaling": "Managed Instance Group (MIG) Autoscaler",
+      "tradeoff": "Higher operational overhead for OS patching & image updates"
+    },
+    {
+      "requirement": "Fault-tolerant batch processing (Monte Carlo, ML training)",
+      "recommended": "Compute Engine Spot VMs",
+      "scaling": "MIG Autoscaling with preemption handling",
+      "tradeoff": "60-91% discount, but can be preempted at any time"
+    },
+    {
+      "requirement": "Physical hardware isolation for compliance & BYOL licensing",
+      "recommended": "Sole-Tenant Nodes",
+      "scaling": "Dedicated physical GCE server node pools",
+      "tradeoff": "Incurs full dedicated host server hardware cost"
+    },
+    {
+      "requirement": "Data-in-use memory encryption in RAM (AMD SEV)",
+      "recommended": "Confidential VMs",
+      "scaling": "Standard GCE VM scaling",
+      "tradeoff": "Requires supported machine types (N2D, C2D)"
+    }
+  ],
+  "databaseStorageMatrix": [
+    {
+      "requirement": "Global Relational Transactional (ACID SQL)",
+      "recommended": "Cloud Spanner",
+      "scalability": "Unlimited horizontal, 99.999% SLA",
+      "tradeoff": "Higher baseline cost than regional Cloud SQL"
+    },
+    {
+      "requirement": "Managed PostgreSQL with extreme performance (4x Cloud SQL)",
+      "recommended": "AlloyDB for PostgreSQL",
+      "scalability": "Scales read pools up to 20 nodes, 99.99% SLA",
+      "tradeoff": "PostgreSQL compatible only; higher cost tier"
+    },
+    {
+      "requirement": "Regional Managed SQL (PostgreSQL, MySQL, SQL Server)",
+      "recommended": "Cloud SQL",
+      "scalability": "Up to 64TB storage, 99.95% HA SLA",
+      "tradeoff": "Primary VM scale-up limit (No multi-region write scaling)"
+    },
+    {
+      "requirement": "High-Throughput IoT / Sensor Telemetry NoSQL",
+      "recommended": "Cloud Bigtable",
+      "scalability": "Petabyte scale, sub-10ms latency",
+      "tradeoff": "No SQL joins; requires row key design planning"
+    },
+    {
+      "requirement": "Mobile / Web Hierarchical JSON Document NoSQL",
+      "recommended": "Firestore (Native Mode)",
+      "scalability": "Multi-region, offline client sync",
+      "tradeoff": "1 write/sec limit per single document"
+    },
+    {
+      "requirement": "Sub-millisecond In-Memory Caching & Session Storage",
+      "recommended": "Memorystore (Redis / Memcached)",
+      "scalability": "In-memory cluster caching",
+      "tradeoff": "Volatile RAM caching; requires backend DB persistence"
+    },
+    {
+      "requirement": "Data Warehouse Analytics & Big Data SQL",
+      "recommended": "BigQuery",
+      "scalability": "Serverless petabyte SQL parallel execution",
+      "tradeoff": "Designed for analytics, not sub-10ms single row updates"
+    },
+    {
+      "requirement": "Sub-Second Executive Dashboard Analytics",
+      "recommended": "BigQuery BI Engine",
+      "scalability": "In-memory query acceleration",
+      "tradeoff": "Incurred BI Engine memory reservation pricing"
+    },
+    {
+      "requirement": "Shared POSIX File System over NFSv3 (Video rendering/NAS)",
+      "recommended": "Cloud Filestore (Enterprise)",
+      "scalability": "Up to 100+ TB shared NFS file server",
+      "tradeoff": "Higher cost than object storage"
+    },
+    {
+      "requirement": "High-IOPS Block Storage for Databases",
+      "recommended": "Hyperdisk / Extreme Persistent Disk",
+      "scalability": "Up to 350,000 IOPS per volume",
+      "tradeoff": "Attached to single VM instance"
+    },
+    {
+      "requirement": "Frequently accessed raw binary / media assets",
+      "recommended": "Cloud Storage (Standard Class)",
+      "scalability": "Unlimited object capacity",
+      "tradeoff": "Highest monthly storage rate per GB"
+    },
+    {
+      "requirement": "Monthly accessed data (accessed once per 30 days)",
+      "recommended": "Cloud Storage (Nearline Class)",
+      "scalability": "Unlimited object capacity",
+      "tradeoff": "30-day minimum billing retention requirement"
+    },
+    {
+      "requirement": "Quarterly accessed data (accessed once per 90 days)",
+      "recommended": "Cloud Storage (Coldline Class)",
+      "scalability": "Unlimited object capacity",
+      "tradeoff": "90-day minimum billing retention requirement"
+    },
+    {
+      "requirement": "Long-term compliance archives (accessed once per year)",
+      "recommended": "Cloud Storage (Archive Class)",
+      "scalability": "Unlimited object capacity",
+      "tradeoff": "365-day minimum retention; higher retrieval fee"
+    }
+  ],
+  "networkingLoadBalancingMatrix": [
+    {
+      "requirement": "Global Layer 7 HTTP/S Load Balancing, SSL Termination, Cloud Armor",
+      "recommended": "Global External Application Load Balancer",
+      "scope": "Global (Anycast IP)",
+      "characteristic": "Proxies HTTP/S traffic, cross-region failover"
+    },
+    {
+      "requirement": "Regional Layer 7 HTTP/S Load Balancing for single region",
+      "recommended": "Regional External Application Load Balancer",
+      "scope": "Regional",
+      "characteristic": "Regional proxy for localized compliance"
+    },
+    {
+      "requirement": "Non-HTTP high-performance TCP/UDP traffic, Client IP preservation",
+      "recommended": "Regional External Network Passthrough LB",
+      "scope": "Regional (Passthrough)",
+      "characteristic": "Direct server return, no proxying, maximum IOPS"
+    },
+    {
+      "requirement": "Internal Private VPC Microservice Layer 7 Routing",
+      "recommended": "Internal Application Load Balancer",
+      "scope": "Regional / Global Access",
+      "characteristic": "Private internal IP frontend for VPC microservices"
+    },
+    {
+      "requirement": "Private Dedicated Fiber Circuit (No Public Internet)",
+      "recommended": "Dedicated Interconnect",
+      "scope": "Hybrid (Physical)",
+      "characteristic": "10 Gbps / 100 Gbps ports at GCP co-location facilities"
+    },
+    {
+      "requirement": "Private Carrier Circuit (No Co-location presence)",
+      "recommended": "Partner Interconnect",
+      "scope": "Hybrid (Partner)",
+      "characteristic": "50 Mbps to 10 Gbps routed via carrier partner"
+    },
+    {
+      "requirement": "Direct Fiber Connection to Multi-Cloud (AWS/Azure)",
+      "recommended": "Cross-Cloud Interconnect",
+      "scope": "Multi-Cloud",
+      "characteristic": "Direct 10G/100G link between GCP and AWS/Azure"
+    },
+    {
+      "requirement": "Encrypted Public Internet Tunnel",
+      "recommended": "HA Cloud VPN",
+      "scope": "Hybrid (Internet)",
+      "characteristic": "3 Gbps per tunnel, 99.99% SLA via dual IPsec tunnels"
+    },
+    {
+      "requirement": "Private Egress to 3rd-Party SaaS API without CIDR Overlaps",
+      "recommended": "Private Service Connect (PSC)",
+      "scope": "VPC Service Endpoint",
+      "characteristic": "Unidirectional producer-consumer endpoint"
+    },
+    {
+      "requirement": "Connecting 50+ Projects Centralized Network Governance",
+      "recommended": "Shared VPC",
+      "scope": "Organization / Host Project",
+      "characteristic": "Central Host project manages subnets for Service projects"
+    },
+    {
+      "requirement": "Transitive Hub-and-Spoke Routing across VPCs & SD-WAN",
+      "recommended": "Network Connectivity Center (NCC)",
+      "scope": "Global Transit",
+      "characteristic": "Hub-and-spoke router for VPCs, Interconnects, SD-WAN"
+    },
+    {
+      "requirement": "Intercepting & Blocking Malicious Domains at DNS Layer",
+      "recommended": "Cloud DNS Response Policy Zones (RPZ)",
+      "scope": "DNS Security",
+      "characteristic": "Sinkholes malicious command-and-control domain lookups"
+    }
+  ],
+  "securityComplianceMatrix": [
+    {
+      "requirement": "GKE Pod Auth without JSON keys",
+      "recommended": "Workload Identity",
+      "rationale": "Binds Kubernetes Service Account (KSA) to Google Service Account (GSA)"
+    },
+    {
+      "requirement": "AWS / Azure / GitHub CI Auth without JSON keys",
+      "recommended": "Workload Identity Federation",
+      "rationale": "Exchanges short-lived OIDC/SAML tokens for temporary GCP IAM tokens"
+    },
+    {
+      "requirement": "Zero Trust Remote Web Access without VPN",
+      "recommended": "Identity-Aware Proxy (IAP)",
+      "rationale": "Evaluates user identity + device context before granting HTTP access"
+    },
+    {
+      "requirement": "Preventing API Data Exfiltration between Projects",
+      "recommended": "VPC Service Controls",
+      "rationale": "Establishes network perimeters around GCP APIs (GCS, BigQuery)"
+    },
+    {
+      "requirement": "Web WAF & DDoS Protection at Edge",
+      "recommended": "Cloud Armor",
+      "rationale": "Mitigates OWASP Top 10 (SQLi, XSS), rate-limiting, geo-blocking on Load Balancer"
+    },
+    {
+      "requirement": "Customer Key Lifecycle & Instant Revocation",
+      "recommended": "Customer-Managed Encryption Keys (CMEK)",
+      "rationale": "Full key rotation and instant revocation control via Cloud KMS / HSM"
+    },
+    {
+      "requirement": "Keys Stored Completely Off-Cloud in On-Prem HSM",
+      "recommended": "Customer-Supplied Encryption Keys (CSEK)",
+      "rationale": "Raw AES key supplied in API header; never persisted in GCP"
+    },
+    {
+      "requirement": "Automated PII / PHI Inspection & Redaction",
+      "recommended": "Sensitive Data Protection (DLP API)",
+      "rationale": "Redacts/tokenizes SSN, credit cards, and medical data before storage"
+    },
+    {
+      "requirement": "Enforcing Container Image Signature Validation",
+      "recommended": "Binary Authorization",
+      "rationale": "Blocks deployment of un-signed or un-scanned container images on GKE"
+    },
+    {
+      "requirement": "Organization-Wide Compliance & Threat Detection",
+      "recommended": "Security Command Center (SCC Premium)",
+      "rationale": "Centralized threat detection (cryptomining, malware) and CIS benchmark compliance"
+    },
+    {
+      "requirement": "Preventing Service Account JSON Key Creation",
+      "recommended": "Organization Policy (`iam.disableServiceAccountKeyCreation`)",
+      "rationale": "Central policy constraint applied at Org/Folder level"
+    },
+    {
+      "requirement": "Immutable Audit Storage for Legal Compliance",
+      "recommended": "Cloud Storage Bucket Lock (WORM)",
+      "rationale": "Enforces non-rewritable storage policy for 1-10 years"
+    }
+  ],
+  "analyticsAiMatrix": [
+    {
+      "requirement": "Global Real-Time Event Buffering & Message Ingestion",
+      "recommended": "Cloud Pub/Sub",
+      "rationale": "Serverless, decoupled publisher/subscriber ingestion"
+    },
+    {
+      "requirement": "Rate-Limited Task Queue & Scheduled Delivery Delays",
+      "recommended": "Cloud Tasks",
+      "rationale": "Explicit rate throttling (e.g. 10 req/sec) and retry policies"
+    },
+    {
+      "requirement": "Unified Event Routing from 90+ GCP Sources",
+      "recommended": "Eventarc",
+      "rationale": "Routes CloudEvents payloads to Cloud Run / Functions"
+    },
+    {
+      "requirement": "Stream & Batch Unified Data Pipelines (Apache Beam)",
+      "recommended": "Cloud Dataflow",
+      "rationale": "Managed stream windowing with exactly-once processing"
+    },
+    {
+      "requirement": "Managed Apache Hadoop / Spark Clusters",
+      "recommended": "Dataproc",
+      "rationale": "Spins up Hadoop/Spark clusters; supports Spot secondary workers"
+    },
+    {
+      "requirement": "Serverless Apache Spark Execution (No Cluster Ops)",
+      "recommended": "Dataproc Serverless",
+      "rationale": "Runs PySpark batch jobs paying only for job execution time"
+    },
+    {
+      "requirement": "Python DAG Workflow Orchestration (Apache Airflow)",
+      "recommended": "Cloud Composer",
+      "rationale": "Managed Airflow for complex ETL pipeline dependency tracking"
+    },
+    {
+      "requirement": "Lightweight Microservice API Orchestration",
+      "recommended": "Cloud Workflows",
+      "rationale": "Serverless HTTP/JSON API workflow execution"
+    },
+    {
+      "requirement": "Enterprise Search & Retrieval-Augmented Generation (RAG)",
+      "recommended": "Vertex AI Search & Conversation",
+      "rationale": "Grounds Gemini LLMs on enterprise data without model re-training"
+    },
+    {
+      "requirement": "High-Dimensional Vector Embedding Search",
+      "recommended": "Vertex AI Vector Search",
+      "rationale": "Sub-millisecond vector similarity search at billion-scale"
+    },
+    {
+      "requirement": "Custom PyTorch / TensorFlow Model Training on GPUs",
+      "recommended": "Vertex AI Custom Training",
+      "rationale": "Custom Docker container training on GPU/TPU node pools"
+    }
+  ],
+  "disasterRecoveryMatrix": [
+    {
+      "requirement": "RTO < 1 min, RPO ≈ 0 (Mission Critical)",
+      "recommended": "Active-Active (Hot Standby)",
+      "architecture": "Multi-Region Global Load Balancer + Multi-Region Spanner + GKE in 2 regions"
+    },
+    {
+      "requirement": "RTO < 15 mins, RPO < 1 min (High Priority)",
+      "recommended": "Warm Standby (Pilot Light)",
+      "architecture": "Minimal capacity running in secondary region + DB read replicas; auto-scale on failure"
+    },
+    {
+      "requirement": "RTO < 24 hours, RPO < 24 hours (Low Cost)",
+      "recommended": "Cold Standby (Backup & Restore)",
+      "architecture": "Daily Cloud Storage backups + scripted Terraform recreate of infrastructure"
+    }
+  ],
+  "migrationToolingMatrix": [
+    {
+      "scenario": "VM Data Center Evacuation (Lift & Shift)",
+      "tool": "Migrate to Compute Engine",
+      "mechanism": "Streaming VM disk replication directly into GCE VMs"
+    },
+    {
+      "scenario": "VM Monolith to Kubernetes Containers",
+      "tool": "Migrate to Containers (Migrate for Anthos)",
+      "mechanism": "Automates extracting VM workloads into GKE Docker containers"
+    },
+    {
+      "scenario": "Live Database Migration (Zero Downtime)",
+      "tool": "Database Migration Service (DMS)",
+      "mechanism": "Continuous Change Data Capture (CDC) replication for Cloud SQL"
+    },
+    {
+      "scenario": "Continuous Database CDC to BigQuery",
+      "tool": "Datastream",
+      "mechanism": "Serverless streaming replication from Oracle/MySQL into BigQuery"
+    },
+    {
+      "scenario": "Bulk Offline Storage Migration (>20 TB)",
+      "tool": "Cloud Transfer Appliance",
+      "mechanism": "Physical secure storage rack shipped to Google data center"
+    },
+    {
+      "scenario": "Cloud-to-Cloud Storage Bucket Transfer",
+      "tool": "Storage Transfer Service",
+      "mechanism": "Automated GCS-to-GCS or AWS S3-to-GCS transfer pipeline"
+    },
+    {
+      "scenario": "Mainframe COBOL Modernization",
+      "tool": "Dual-Run / Mainframe Modernization",
+      "mechanism": "Parallel cloud transaction execution and verification"
+    }
+  ]
+}

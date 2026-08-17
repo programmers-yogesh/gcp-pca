@@ -1,0 +1,375 @@
+[
+  {
+    "id": "q8",
+    "domain": "Domain 6: Ensuring solution and operations reliability",
+    "topic": "Disaster Recovery, RTO/RPO & Multi-Region Resilience",
+    "caseStudy": "KnightMotives Automotive",
+    "question": "KnightMotives requires a disaster recovery strategy for a critical application with a Recovery Time Objective (RTO) under 1 minute and a Recovery Point Objective (RPO) of near 0. Which architecture meets these stringent requirements?",
+    "options": [
+      "A. Cold Standby: Nightly automated snapshots restored to a secondary region via Terraform upon outage",
+      "B. Warm Standby: Minimal capacity instances running in a secondary region with asynchronous database replication",
+      "C. Hot Standby (Active-Active): Multi-region deployment with Global External Application Load Balancer routing traffic to active GKE clusters in two regions, backed by Cloud Spanner multi-region",
+      "D. Backup & Restore: Cloud Storage regional buckets with dual-region replication and scripted VM recreate scripts"
+    ],
+    "correctAnswer": "C",
+    "explanation": "An Active-Active (Hot Standby) cross-region architecture with Global Load Balancing and Cloud Spanner (multi-region synchronous replication) provides continuous availability, automatic traffic failover, RTO < 1 min, and near-zero RPO.",
+    "distractors": {
+      "A": "Cold standby takes hours to spin up infrastructure and restore backups, failing RTO < 1 min.",
+      "B": "Warm standby with asynchronous replication introduces non-zero data loss (RPO > 0) and requires manual or semi-automated failover DNS changes.",
+      "D": "Backup & restore is a low-cost DR strategy suitable for RTO/RPO measured in hours or days, not minutes."
+    }
+  },
+  {
+    "id": "q15",
+    "domain": "Domain 6: Ensuring solution and operations reliability",
+    "topic": "Cloud Monitoring, Alerting & SRE Principles",
+    "caseStudy": "General Architecture",
+    "question": "Your SRE team defines a Service Level Objective (SLO) of 99.9% availability for a user-facing API. You want to receive alerts before the Error Budget is completely exhausted, rather than triggering alerts on temporary short-lived spikes. What alerting strategy should you implement in Cloud Monitoring?",
+    "options": [
+      "A. Set up a simple metric threshold alert whenever HTTP 5xx count > 10 in 1 minute",
+      "B. Configure an Error Budget Burn Rate alert based on multi-window lookback periods in Cloud Monitoring",
+      "C. Configure Uptime Checks targeting internal pod IP addresses every 10 seconds",
+      "D. Send raw logs to Cloud Storage and run daily SQL queries via BigQuery"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Error Budget Burn Rate alerting measures how fast an application is consuming its error budget relative to the SLO. Multi-window burn rate alerts prevent alert fatigue from transient spikes while ensuring engineers are notified when significant outages risk breaching the SLO.",
+    "distractors": {
+      "A": "Simple threshold alerts trigger false positives during minor transient spikes and lead to alert fatigue.",
+      "C": "Internal pod IPs change dynamically and are not accessible directly to public Cloud Monitoring uptime checkers.",
+      "D": "Daily SQL queries report outages 24 hours late, failing proactive reliability operational requirements."
+    }
+  },
+  {
+    "id": "q27",
+    "domain": "Domain 6: Ensuring solution and operations reliability",
+    "topic": "Log Management & Regulatory Audit Sinks",
+    "caseStudy": "EHR Healthcare",
+    "question": "EHR Healthcare must retain all GCP Cloud Audit Logs for 7 years to satisfy regulatory compliance. Logs must be immutable and cost-effectively stored for long-term retention. How should this logging pipeline be configured?",
+    "options": [
+      "A. Store logs in Cloud Logging log buckets with default 30-day retention",
+      "B. Create a Cloud Logging Log Sink to export audit logs to a Cloud Storage bucket with Object Lock (WORM retention policy)",
+      "C. Stream audit logs to Pub/Sub and discard after 7 days",
+      "D. Store logs in Compute Engine persistent disks"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Exporting audit logs via Cloud Logging Sinks to Cloud Storage with Bucket Lock (Write Once, Read Many / WORM retention policy) guarantees tamper-proof immutability and minimal long-term storage cost for 7-year retention compliance.",
+    "distractors": {
+      "A": "Cloud Logging default retention is 30 days and extending retention in Cloud Logging is expensive compared to Cloud Storage Coldline/Archive.",
+      "C": "Pub/Sub retains messages for up to 7 days maximum and does not provide permanent compliance storage.",
+      "D": "Persistent disks incur high block storage costs and lack compliance object locking capabilities."
+    }
+  },
+  {
+    "id": "q29",
+    "domain": "Domain 6: Ensuring solution and operations reliability",
+    "topic": "Asynchronous Messaging & Fault Tolerance",
+    "caseStudy": "Altostrat Media",
+    "question": "Altostrat Media uses Cloud Pub/Sub to process video encoding jobs. Occasionally, corrupt video files cause subscriber workers to crash repeatedly, cluttering processing queues. How can you prevent poison-pill messages from blocking subscribers?",
+    "options": [
+      "A. Increase subscription message retention duration to 7 days",
+      "B. Configure a Dead-Letter Topic on the Pub/Sub subscription with a maximum retry delivery count",
+      "C. Delete the Pub/Sub topic and recreate it",
+      "D. Disable message acknowledgement in the subscriber application code"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Dead-Letter Topics in Pub/Sub catch unacknowledgeable or failing 'poison pill' messages after a configurable number of delivery attempts, moving them to a separate topic for debugging without blocking the primary queue.",
+    "distractors": {
+      "A": "Increasing retention keeps failing messages in the queue longer, compounding the issue.",
+      "C": "Deleting the topic causes total data loss for all valid queued messages.",
+      "D": "Disabling ACKs forces Pub/Sub to resend the failing message indefinitely, worsening crash loops."
+    }
+  },
+  {
+    "id": "q36",
+    "domain": "Domain 6: Ensuring solution and operations reliability",
+    "topic": "Database High Availability & Failover Mechanics",
+    "caseStudy": "General Architecture",
+    "question": "A Cloud SQL for PostgreSQL instance is configured with High Availability (HA). During a primary zone outage, what is the automated failover process and how do applications reconnect without changing connection strings?",
+    "options": [
+      "A. Developers must manually trigger failover via gcloud CLI and update application IP settings",
+      "B. Cloud SQL automatically switches traffic to the standby instance in a secondary zone using a regional persistent disk/failover IP, preserving the original IP address",
+      "C. Traffic is rerouted to a multi-region Cloud Storage bucket",
+      "D. A new Cloud SQL instance is created from a backup snapshot taking 2 hours"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Cloud SQL HA uses a primary and standby instance in different zones with synchronous regional persistent disk replication. Upon failure, automated health checks trigger failover to the standby while maintaining the same IP address.",
+    "distractors": {
+      "A": "Cloud SQL HA failover is completely automatic and does not require developer manual intervention or IP changes.",
+      "C": "Cloud Storage cannot replace a live relational database instance during failover.",
+      "D": "Restoring from backups is a disaster recovery option, not an automated HA zone failover."
+    }
+  },
+  {
+    "id": "q47",
+    "domain": "Domain 6: Ensuring solution and operations reliability",
+    "topic": "Kubernetes Managed Monitoring & Prometheus Metrics",
+    "caseStudy": "General Architecture",
+    "question": "Your DevOps team uses custom Prometheus metrics inside GKE applications. They want to collect and monitor these metrics at scale across 20 GKE clusters without managing self-hosted Prometheus storage, scrapers, or alertmanagers. What GCP service should be used?",
+    "options": [
+      "A. Managed Service for Prometheus (GMP)",
+      "B. Datadog agent installed on worker nodes",
+      "C. Send metrics to Cloud Storage via Cloud Dataflow",
+      "D. Run standard Cloud Logging agents"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Google Cloud Managed Service for Prometheus (GMP) is a fully managed, multi-cluster Prometheus monitoring solution built on Cloud Monitoring infrastructure, allowing seamless collection of custom Prometheus metrics without operational storage overhead.",
+    "distractors": {
+      "A": "",
+      "B": "Datadog requires third-party licensing and external cluster agent management.",
+      "C": "Cloud Dataflow is a stream processing engine, not a Prometheus metrics collector/alerting framework.",
+      "D": "Standard Logging agents collect text logs, not Prometheus time-series metric scrapers."
+    }
+  },
+  {
+    "id": "q106",
+    "domain": "Domain 6: Ensuring solution and operations reliability",
+    "topic": "Distributed Tracing & Microservice Latency",
+    "caseStudy": "General Architecture",
+    "question": "Users complain of intermittent 5-second request delays when making API calls. The request traverses 6 internal microservices across GKE and Cloud Run. How can your team pinpoint the exact microservice causing latent bottlenecks?",
+    "options": [
+      "A. Enable Cloud Trace and propagate OpenTelemetry / W3C trace context headers (`traceparent`) across microservice HTTP calls",
+      "B. Restart all microservices every 10 minutes",
+      "C. Increase CPU limits on every container to 64 vCPUs",
+      "D. Export VM metrics to Excel"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Trace latency sampling with OpenTelemetry trace context propagation tracks requests across microservice boundaries, generating waterfall latency charts that pinpoint exact bottleneck services.",
+    "distractors": {
+      "A": "",
+      "B": "Restarting microservices does not identify the root cause of latency bottlenecks.",
+      "C": "Blindly scaling CPU limits increases cost without resolving underlying latency bugs.",
+      "D": "Excel spreadsheets cannot capture distributed microservice latency spans."
+    }
+  },
+  {
+    "id": "q107",
+    "domain": "Domain 6: Ensuring solution and operations reliability",
+    "topic": "Synthetic Monitoring & Uptime Checks",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail needs automated 24/7 monitoring of their public checkout website from 5 global locations (US, Europe, Asia). If the website returns non-200 HTTP status codes or takes longer than 3 seconds to respond, an alert must trigger PagerDuty immediately. What Cloud Monitoring feature fulfills this?",
+    "options": [
+      "A. Synthetic Uptime Checks configured in Cloud Monitoring",
+      "B. Cloud Storage Lifecycle Rules",
+      "C. VPC Flow Logs",
+      "D. Secret Manager rotation alerts"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Cloud Monitoring Uptime Checks periodically probe public or private HTTP/S endpoints from multiple global locations, triggering alerting policies and incident management tools (PagerDuty, Slack) upon failure.",
+    "distractors": {
+      "A": "",
+      "B": "Storage Lifecycle rules transition object storage classes.",
+      "C": "VPC Flow Logs record network IP metadata, but do not perform synthetic global web HTTP status probing.",
+      "D": "Secret Manager manages credentials."
+    }
+  },
+  {
+    "id": "q201",
+    "domain": "Domain 6: Ensuring solution and operations reliability",
+    "topic": "SRE Principles, Monitoring & Reliability",
+    "caseStudy": "General Architecture",
+    "question": "Reliability Scenario 1: An SRE team manages a critical microservice API. They define a Service Level Objective (SLO) of 99.9% success rate. What Cloud Monitoring metric calculation determines how much error budget remains before triggering alerting policies?",
+    "options": [
+      "A. Error Budget Burn Rate calculation based on short and long lookback windows",
+      "B. CPU Utilization percentage threshold",
+      "C. Disk space capacity percentage",
+      "D. Network packet loss count"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Error Budget Burn Rate calculations measure the consumption speed of an SLO error budget over multi-window lookback periods to prevent false positive alerts while alerting before budget exhaustion.",
+    "distractors": {
+      "A": "",
+      "B": "Raw CPU percentage threshold alerts lead to alert fatigue during transient spikes.",
+      "C": "Disk space does not measure API request success rate SLOs.",
+      "D": "Network packet loss is a network-level metric, not an application SLO error budget."
+    }
+  },
+  {
+    "id": "q202",
+    "domain": "Domain 6: Ensuring solution and operations reliability",
+    "topic": "SRE Principles, Monitoring & Reliability",
+    "caseStudy": "General Architecture",
+    "question": "Reliability Scenario 2: An SRE team manages a critical microservice API. They define a Service Level Objective (SLO) of 99.9% success rate. What Cloud Monitoring metric calculation determines how much error budget remains before triggering alerting policies?",
+    "options": [
+      "A. Error Budget Burn Rate calculation based on short and long lookback windows",
+      "B. CPU Utilization percentage threshold",
+      "C. Disk space capacity percentage",
+      "D. Network packet loss count"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Error Budget Burn Rate calculations measure the consumption speed of an SLO error budget over multi-window lookback periods to prevent false positive alerts while alerting before budget exhaustion.",
+    "distractors": {
+      "A": "",
+      "B": "Raw CPU percentage threshold alerts lead to alert fatigue during transient spikes.",
+      "C": "Disk space does not measure API request success rate SLOs.",
+      "D": "Network packet loss is a network-level metric, not an application SLO error budget."
+    }
+  },
+  {
+    "id": "q203",
+    "domain": "Domain 6: Ensuring solution and operations reliability",
+    "topic": "SRE Principles, Monitoring & Reliability",
+    "caseStudy": "General Architecture",
+    "question": "Reliability Scenario 3: An SRE team manages a critical microservice API. They define a Service Level Objective (SLO) of 99.9% success rate. What Cloud Monitoring metric calculation determines how much error budget remains before triggering alerting policies?",
+    "options": [
+      "A. Error Budget Burn Rate calculation based on short and long lookback windows",
+      "B. CPU Utilization percentage threshold",
+      "C. Disk space capacity percentage",
+      "D. Network packet loss count"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Error Budget Burn Rate calculations measure the consumption speed of an SLO error budget over multi-window lookback periods to prevent false positive alerts while alerting before budget exhaustion.",
+    "distractors": {
+      "A": "",
+      "B": "Raw CPU percentage threshold alerts lead to alert fatigue during transient spikes.",
+      "C": "Disk space does not measure API request success rate SLOs.",
+      "D": "Network packet loss is a network-level metric, not an application SLO error budget."
+    }
+  },
+  {
+    "id": "q204",
+    "domain": "Domain 6: Ensuring solution and operations reliability",
+    "topic": "SRE Principles, Monitoring & Reliability",
+    "caseStudy": "General Architecture",
+    "question": "Reliability Scenario 4: An SRE team manages a critical microservice API. They define a Service Level Objective (SLO) of 99.9% success rate. What Cloud Monitoring metric calculation determines how much error budget remains before triggering alerting policies?",
+    "options": [
+      "A. Error Budget Burn Rate calculation based on short and long lookback windows",
+      "B. CPU Utilization percentage threshold",
+      "C. Disk space capacity percentage",
+      "D. Network packet loss count"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Error Budget Burn Rate calculations measure the consumption speed of an SLO error budget over multi-window lookback periods to prevent false positive alerts while alerting before budget exhaustion.",
+    "distractors": {
+      "A": "",
+      "B": "Raw CPU percentage threshold alerts lead to alert fatigue during transient spikes.",
+      "C": "Disk space does not measure API request success rate SLOs.",
+      "D": "Network packet loss is a network-level metric, not an application SLO error budget."
+    }
+  },
+  {
+    "id": "q205",
+    "domain": "Domain 6: Ensuring solution and operations reliability",
+    "topic": "SRE Principles, Monitoring & Reliability",
+    "caseStudy": "General Architecture",
+    "question": "Reliability Scenario 5: An SRE team manages a critical microservice API. They define a Service Level Objective (SLO) of 99.9% success rate. What Cloud Monitoring metric calculation determines how much error budget remains before triggering alerting policies?",
+    "options": [
+      "A. Error Budget Burn Rate calculation based on short and long lookback windows",
+      "B. CPU Utilization percentage threshold",
+      "C. Disk space capacity percentage",
+      "D. Network packet loss count"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Error Budget Burn Rate calculations measure the consumption speed of an SLO error budget over multi-window lookback periods to prevent false positive alerts while alerting before budget exhaustion.",
+    "distractors": {
+      "A": "",
+      "B": "Raw CPU percentage threshold alerts lead to alert fatigue during transient spikes.",
+      "C": "Disk space does not measure API request success rate SLOs.",
+      "D": "Network packet loss is a network-level metric, not an application SLO error budget."
+    }
+  },
+  {
+    "id": "q206",
+    "domain": "Domain 6: Ensuring solution and operations reliability",
+    "topic": "SRE Principles, Monitoring & Reliability",
+    "caseStudy": "General Architecture",
+    "question": "Reliability Scenario 6: An SRE team manages a critical microservice API. They define a Service Level Objective (SLO) of 99.9% success rate. What Cloud Monitoring metric calculation determines how much error budget remains before triggering alerting policies?",
+    "options": [
+      "A. Error Budget Burn Rate calculation based on short and long lookback windows",
+      "B. CPU Utilization percentage threshold",
+      "C. Disk space capacity percentage",
+      "D. Network packet loss count"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Error Budget Burn Rate calculations measure the consumption speed of an SLO error budget over multi-window lookback periods to prevent false positive alerts while alerting before budget exhaustion.",
+    "distractors": {
+      "A": "",
+      "B": "Raw CPU percentage threshold alerts lead to alert fatigue during transient spikes.",
+      "C": "Disk space does not measure API request success rate SLOs.",
+      "D": "Network packet loss is a network-level metric, not an application SLO error budget."
+    }
+  },
+  {
+    "id": "q207",
+    "domain": "Domain 6: Ensuring solution and operations reliability",
+    "topic": "SRE Principles, Monitoring & Reliability",
+    "caseStudy": "General Architecture",
+    "question": "Reliability Scenario 7: An SRE team manages a critical microservice API. They define a Service Level Objective (SLO) of 99.9% success rate. What Cloud Monitoring metric calculation determines how much error budget remains before triggering alerting policies?",
+    "options": [
+      "A. Error Budget Burn Rate calculation based on short and long lookback windows",
+      "B. CPU Utilization percentage threshold",
+      "C. Disk space capacity percentage",
+      "D. Network packet loss count"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Error Budget Burn Rate calculations measure the consumption speed of an SLO error budget over multi-window lookback periods to prevent false positive alerts while alerting before budget exhaustion.",
+    "distractors": {
+      "A": "",
+      "B": "Raw CPU percentage threshold alerts lead to alert fatigue during transient spikes.",
+      "C": "Disk space does not measure API request success rate SLOs.",
+      "D": "Network packet loss is a network-level metric, not an application SLO error budget."
+    }
+  },
+  {
+    "id": "q208",
+    "domain": "Domain 6: Ensuring solution and operations reliability",
+    "topic": "SRE Principles, Monitoring & Reliability",
+    "caseStudy": "General Architecture",
+    "question": "Reliability Scenario 8: An SRE team manages a critical microservice API. They define a Service Level Objective (SLO) of 99.9% success rate. What Cloud Monitoring metric calculation determines how much error budget remains before triggering alerting policies?",
+    "options": [
+      "A. Error Budget Burn Rate calculation based on short and long lookback windows",
+      "B. CPU Utilization percentage threshold",
+      "C. Disk space capacity percentage",
+      "D. Network packet loss count"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Error Budget Burn Rate calculations measure the consumption speed of an SLO error budget over multi-window lookback periods to prevent false positive alerts while alerting before budget exhaustion.",
+    "distractors": {
+      "A": "",
+      "B": "Raw CPU percentage threshold alerts lead to alert fatigue during transient spikes.",
+      "C": "Disk space does not measure API request success rate SLOs.",
+      "D": "Network packet loss is a network-level metric, not an application SLO error budget."
+    }
+  },
+  {
+    "id": "q209",
+    "domain": "Domain 6: Ensuring solution and operations reliability",
+    "topic": "SRE Principles, Monitoring & Reliability",
+    "caseStudy": "General Architecture",
+    "question": "Reliability Scenario 9: An SRE team manages a critical microservice API. They define a Service Level Objective (SLO) of 99.9% success rate. What Cloud Monitoring metric calculation determines how much error budget remains before triggering alerting policies?",
+    "options": [
+      "A. Error Budget Burn Rate calculation based on short and long lookback windows",
+      "B. CPU Utilization percentage threshold",
+      "C. Disk space capacity percentage",
+      "D. Network packet loss count"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Error Budget Burn Rate calculations measure the consumption speed of an SLO error budget over multi-window lookback periods to prevent false positive alerts while alerting before budget exhaustion.",
+    "distractors": {
+      "A": "",
+      "B": "Raw CPU percentage threshold alerts lead to alert fatigue during transient spikes.",
+      "C": "Disk space does not measure API request success rate SLOs.",
+      "D": "Network packet loss is a network-level metric, not an application SLO error budget."
+    }
+  },
+  {
+    "id": "q210",
+    "domain": "Domain 6: Ensuring solution and operations reliability",
+    "topic": "SRE Principles, Monitoring & Reliability",
+    "caseStudy": "General Architecture",
+    "question": "Reliability Scenario 10: An SRE team manages a critical microservice API. They define a Service Level Objective (SLO) of 99.9% success rate. What Cloud Monitoring metric calculation determines how much error budget remains before triggering alerting policies?",
+    "options": [
+      "A. Error Budget Burn Rate calculation based on short and long lookback windows",
+      "B. CPU Utilization percentage threshold",
+      "C. Disk space capacity percentage",
+      "D. Network packet loss count"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Error Budget Burn Rate calculations measure the consumption speed of an SLO error budget over multi-window lookback periods to prevent false positive alerts while alerting before budget exhaustion.",
+    "distractors": {
+      "A": "",
+      "B": "Raw CPU percentage threshold alerts lead to alert fatigue during transient spikes.",
+      "C": "Disk space does not measure API request success rate SLOs.",
+      "D": "Network packet loss is a network-level metric, not an application SLO error budget."
+    }
+  }
+]

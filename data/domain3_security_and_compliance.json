@@ -1,0 +1,827 @@
+[
+  {
+    "id": "q4",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM, Workload Identity & Encryption",
+    "caseStudy": "KnightMotives Automotive",
+    "question": "KnightMotives wants to run GKE microservices that access Cloud Storage buckets containing sensitive telemetry logs. You must authenticate the microservices without storing long-lived service account keys inside containers or Kubernetes secrets. What is the Google-recommended approach?",
+    "options": [
+      "A. Store service account JSON keys inside Kubernetes Secrets and mount them as volumes",
+      "B. Enable Workload Identity Federation / Workload Identity on the GKE cluster and map Kubernetes Service Accounts (KSA) to Google Service Accounts (GSA)",
+      "C. Use Compute Engine default service account attached to the GKE worker node pool with full cloud-platform scope",
+      "D. Encrypt service account keys with Cloud KMS and inject them via environment variables at pod startup"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Workload Identity allows Kubernetes workloads in GKE to securely access Google Cloud services using short-lived IAM credentials without managing or exporting service account JSON keys.",
+    "distractors": {
+      "A": "Storing long-lived service account keys inside GKE secrets increases key exposure risk and requires manual key rotation management.",
+      "C": "Assigning full scope to worker node default service accounts grants excessive privileges to all pods running on those nodes, violating the principle of least privilege.",
+      "D": "Encrypting keys still relies on managing service account key files, which Google explicitly advises against when Workload Identity is available."
+    }
+  },
+  {
+    "id": "q5",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "Data Protection & DLP",
+    "caseStudy": "EHR Healthcare",
+    "question": "EHR Healthcare ingests patient interaction records into BigQuery. Before streaming into analytical tables, sensitive Personally Identifiable Information (PII) and Protected Health Information (PHI) like SSN and medical record numbers must be automatically detected, masked, or tokenized. Which GCP service provides native capability for this?",
+    "options": [
+      "A. Cloud Security Command Center (SCC)",
+      "B. Sensitive Data Protection (formerly Cloud Data Loss Prevention / DLP API)",
+      "C. Cloud Key Management Service (KMS)",
+      "D. VPC Service Controls"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Sensitive Data Protection (Cloud DLP) provides automated detection, inspection, and de-identification (masking, tokenization, pseudonymization) of PII/PHI data before storage in BigQuery or Cloud Storage.",
+    "distractors": {
+      "A": "Security Command Center is a security risk management and threat detection platform for GCP resources, not a data de-identification tool.",
+      "C": "Cloud KMS manages cryptographic keys, but does not perform automated content inspection or PII tokenization logic.",
+      "D": "VPC Service Controls create security perimeters around GCP APIs to prevent data exfiltration, but do not redact PII inside data payloads."
+    }
+  },
+  {
+    "id": "q10",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "Zero Trust Security & BeyondCorp",
+    "caseStudy": "General Architecture",
+    "question": "Your enterprise wants to replace traditional corporate VPN access to internal GCP web apps for remote employees with a Zero Trust access architecture that evaluates device health, user identity, and context before granting access. Which GCP solution fulfills this?",
+    "options": [
+      "A. Cloud NAT with Cloud Armor security policies",
+      "B. Identity-Aware Proxy (IAP) combined with Context-Aware Access policies",
+      "C. Bastion Hosts with SSH keys managed via OS Login",
+      "D. Cloud Interconnect with IPsec VPN"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Identity-Aware Proxy (IAP) enables BeyondCorp Zero Trust architecture, verifying a user's identity and context (device security posture, IP location, IAM role) before allowing HTTP/HTTPS access to internal applications without requiring a VPN connection.",
+    "distractors": {
+      "A": "Cloud NAT provides egress outbound internet access for private instances, not zero-trust inbound app authorization.",
+      "C": "Bastion hosts provide admin SSH jump points, not application-level HTTP/S Zero Trust context-aware authorization.",
+      "D": "Cloud Interconnect provides network layer connectivity, not Zero Trust identity-based application access."
+    }
+  },
+  {
+    "id": "q12",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "Key Management & Customer Managed Keys (CMEK)",
+    "caseStudy": "EHR Healthcare",
+    "question": "EHR Healthcare must comply with strict regulatory requirements stating that all medical images stored in Cloud Storage must be encrypted using cryptographic keys where the customer maintains full key lifecycle control and key revocation rights. Which encryption method is required?",
+    "options": [
+      "A. Google-managed encryption keys (Default Encryption)",
+      "B. Customer-Managed Encryption Keys (CMEK) via Cloud KMS",
+      "C. Client-side RSA encryption stored in environment variables",
+      "D. VPC Service Controls with Cloud HSM disabled"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Customer-Managed Encryption Keys (CMEK) generated and managed in Cloud KMS (or Cloud HSM) grant full control over key rotation, IAM permissions, and instant key revocation capabilities for data stored in GCP services like Cloud Storage, BigQuery, and Compute Engine disks.",
+    "distractors": {
+      "A": "Google-managed keys encrypt all data by default, but Google controls the key lifecycle and rotation, failing customer control requirements.",
+      "C": "Client-side manual encryption requires custom key handling logic in application code and is prone to key leakages or operational failures.",
+      "D": "VPC Service Controls protect network boundaries, not cryptographic key management lifecycles."
+    }
+  },
+  {
+    "id": "q16",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "Web Application Security & DDoS Protection",
+    "caseStudy": "Cymbal Retail",
+    "question": "Cymbal Retail's e-commerce website experiences SQL injection attempts and volumetric Layer 7 DDoS attacks during peak sale events. They use a Global External Application Load Balancer. Which GCP service provides native WAF capabilities and DDoS mitigation?",
+    "options": [
+      "A. Cloud NAT",
+      "B. Cloud Armor",
+      "C. Cloud IDS (Intrusion Detection System)",
+      "D. Security Command Center"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Cloud Armor integrates directly with Global External Application Load Balancers to provide enterprise Layer 7 DDoS protection, OWASP Top 10 mitigation (SQLi, XSS), rate limiting, and geo-blocking security policies.",
+    "distractors": {
+      "A": "Cloud NAT provides outbound NAT connectivity for private instances without public IP addresses, not inbound WAF/DDoS protection.",
+      "C": "Cloud IDS detects suspicious network traffic patterns (packet inspection), but does not block web application traffic at the edge like Cloud Armor.",
+      "D": "Security Command Center provides security posture monitoring and misconfiguration alerts, not real-time inline HTTP/S traffic blocking."
+    }
+  },
+  {
+    "id": "q18",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "Resource Hierarchy & Governance Policies",
+    "caseStudy": "General Architecture",
+    "question": "Your company security directive states that developer service account JSON key creation must be blocked across all GCP projects in the organization. How can you enforce this centrally across present and future GCP projects?",
+    "options": [
+      "A. Write a script to audit IAM permissions every hour",
+      "B. Enforce the Organization Policy constraint 'iam.disableServiceAccountKeyCreation' at the Organization Node level",
+      "C. Revoke the Owner role from all developers",
+      "D. Enable Security Command Center and configure Slack alerts"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Organization Policies enforce centralized constraints across all projects under an Organization or Folder node. Enforcing `iam.disableServiceAccountKeyCreation` prevents any user from generating service account JSON keys regardless of project IAM roles.",
+    "distractors": {
+      "A": "Hourly audit scripts are reactive and leave an window of risk where keys can be created and leaked.",
+      "C": "Revoking Owner role is good practice, but users with IAM Admin or Service Account Admin roles could still generate keys unless restricted by Org Policy.",
+      "D": "Security Command Center alerts report violations after the key is already generated."
+    }
+  },
+  {
+    "id": "q19",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "Data Exfiltration Prevention & Perimeter Security",
+    "caseStudy": "EHR Healthcare",
+    "question": "EHR Healthcare wants to prevent compromised credentials from exfiltrating sensitive patient data in BigQuery and Cloud Storage to unauthorized external GCP projects or storage buckets outside the company's network. Which GCP security feature creates a boundary around API services?",
+    "options": [
+      "A. Identity-Aware Proxy (IAP)",
+      "B. VPC Service Controls",
+      "C. Cloud Armor",
+      "D. Identity and Access Management (IAM) Conditions"
+    ],
+    "correctAnswer": "B",
+    "explanation": "VPC Service Controls create security perimeters around GCP services (like BigQuery, Cloud Storage) to block unauthorized data exfiltration, even if an attacker possesses valid IAM credentials.",
+    "distractors": {
+      "A": "IAP controls user access to HTTP web applications, not API-level data movement between GCP projects.",
+      "C": "Cloud Armor protects HTTP/S load balancers against external web attacks, not data exfiltration via internal GCP APIs.",
+      "D": "IAM conditions check request attributes (time, IP), but cannot enforce network API boundary isolation across projects."
+    }
+  },
+  {
+    "id": "q33",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "Secrets Management & Credentials Security",
+    "caseStudy": "General Architecture",
+    "question": "Application pods on GKE need to access database password credentials securely. The credentials must be centrally versioned, audited, and automatically rotated without storing plaintext passwords in Git or container images. What GCP service should be used?",
+    "options": [
+      "A. Store passwords as Kubernetes ConfigMaps",
+      "B. Secret Manager integrated with Secret Store CSI Driver / Workload Identity",
+      "C. Store passwords in Cloud Storage files",
+      "D. Embed passwords as environment variables in Dockerfiles"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Secret Manager provides secure, versioned, audited storage for sensitive secrets (API keys, database passwords) and integrates with GKE via the Secret Store CSI driver using Workload Identity.",
+    "distractors": {
+      "A": "Kubernetes ConfigMaps store plain unencrypted configuration strings and are not secure for password secrets.",
+      "C": "Cloud Storage buckets lack specialized secret versioning, rotation policies, and CSI volume injection integration.",
+      "D": "Hardcoding secrets in Dockerfiles bakes credentials into container images, creating severe security vulnerabilities."
+    }
+  },
+  {
+    "id": "q35",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "Container Supply Chain Security",
+    "caseStudy": "General Architecture",
+    "question": "Your security policy mandates that GKE clusters must ONLY deploy container images that have been scanned for vulnerabilities and cryptographically signed by authorized CI/CD release pipelines. What GCP service enforces container signature validation at deployment time?",
+    "options": [
+      "A. Container Analysis API",
+      "B. Binary Authorization",
+      "C. Security Command Center",
+      "D. Artifact Registry Policy Controller"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Binary Authorization is a deploy-time security control for GKE that ensures only trusted, cryptographically signed container images (attestations) are allowed to run on clusters.",
+    "distractors": {
+      "A": "Container Analysis scans images for CVE vulnerabilities, but does not block GKE cluster deployment execution by itself.",
+      "C": "Security Command Center reports security findings, but does not act as an inline deployment gatekeeper for GKE.",
+      "D": "Artifact Registry stores container images, but Binary Authorization is the actual admission controller service inside GKE."
+    }
+  },
+  {
+    "id": "q39",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "Compliance & Hardware Isolation",
+    "caseStudy": "EHR Healthcare",
+    "question": "EHR Healthcare needs to host legacy software licenses that mandate physical server core dedicated isolation (per-core licensing) and prohibition of multi-tenant shared hardware. Which Compute Engine feature fulfills this requirement?",
+    "options": [
+      "A. Shielded VMs",
+      "B. Sole-Tenant Nodes",
+      "C. Confidential VMs",
+      "D. Preemptible VM instances"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Sole-Tenant Nodes provide dedicated physical Compute Engine servers exclusively for your organization's VMs, satisfying strict software licensing (BYOL) and hardware isolation compliance.",
+    "distractors": {
+      "A": "Shielded VMs protect against firmware and bootloader malware, but still run on multi-tenant shared hardware.",
+      "C": "Confidential VMs encrypt data in memory (AMD SEV), but operate on standard shared multi-tenant hardware unless configured on sole tenants.",
+      "D": "Preemptible VMs are short-lived discounted VMs running on shared infrastructure."
+    }
+  },
+  {
+    "id": "q44",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "Security Posture Management & Threat Intelligence",
+    "caseStudy": "General Architecture",
+    "question": "Your CISO requires real-time security posture monitoring across all GCP projects to detect IAM misconfigurations, exposed public storage buckets, cryptomining malware, and regulatory compliance posture (CIS benchmarks). Which GCP security platform fulfills this?",
+    "options": [
+      "A. Cloud Logging",
+      "B. Security Command Center (SCC) Premium Tier",
+      "C. Cloud Armor",
+      "D. VPC Flow Logs"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Security Command Center (SCC) Premium provides centralized security posture management, asset discovery, threat detection (malware, cryptomining), and automated CIS/PCI compliance benchmarking across an organization.",
+    "distractors": {
+      "A": "Cloud Logging records raw log events, but does not automatically perform threat detection or compliance security scanning.",
+      "C": "Cloud Armor acts as a web firewall for load balancers, not an organization-wide security posture manager.",
+      "D": "VPC Flow Logs record network traffic flows, but lack misconfiguration threat analysis."
+    }
+  },
+  {
+    "id": "q46",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "Immutable Storage & Legal Holds",
+    "caseStudy": "EHR Healthcare",
+    "question": "EHR Healthcare is under legal investigation and must ensure that financial and audit objects stored in a specific Cloud Storage bucket CANNOT be deleted or overwritten by anyone (including project owners or super admins) for 5 years. What configuration should be applied?",
+    "options": [
+      "A. Assign Viewer role to all users in IAM",
+      "B. Configure a Bucket Retention Policy and lock it (Bucket Lock WORM) or apply a Legal Hold",
+      "C. Encrypt files with Customer-Supplied Keys (CSEK)",
+      "D. Backup data to local hard drives"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Locking a Cloud Storage Bucket Retention Policy (WORM) or applying a Legal Hold prevents object deletion or modification by any user (even project owners) until the retention duration expires or the legal hold is removed.",
+    "distractors": {
+      "A": "IAM roles can be modified by Project Owners, so assigning Viewer role does not prevent deletion by admins.",
+      "C": "Encryption encrypts data at rest, but does not prevent bucket or object deletion operations.",
+      "D": "Local hard drives lack tamper-proof cloud audit verification required for court legal holds."
+    }
+  },
+  {
+    "id": "q85",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "Cross-Cloud Identity Authentication",
+    "caseStudy": "General Architecture",
+    "question": "An enterprise deployment running workloads in AWS EC2 needs to read files from Google Cloud Storage buckets. Security policy prohibits exporting long-lived Google Service Account JSON keys to external clouds. What GCP IAM security feature allows AWS IAM roles to authenticate directly to GCP?",
+    "options": [
+      "A. Workload Identity Federation using OpenID Connect (OIDC) / AWS STS",
+      "B. Copy service account keys over email every 30 days",
+      "C. Grant full Owner access to public internet",
+      "D. Hardcode credentials in application source code"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Workload Identity Federation allows external workloads (in AWS, Azure, or GitHub Actions) to exchange short-lived cloud tokens (OIDC/SAML) for temporary GCP IAM access tokens without storing service account keys.",
+    "distractors": {
+      "A": "",
+      "B": "Exporting service account JSON keys to external environments creates severe security leakage hazards.",
+      "C": "Granting public access exposes private enterprise data to unauthorized public users.",
+      "D": "Hardcoding credentials violates basic security hygiene standards."
+    }
+  },
+  {
+    "id": "q86",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "Customer-Supplied Encryption Keys (CSEK)",
+    "caseStudy": "EHR Healthcare",
+    "question": "EHR Healthcare requires data stored on Compute Engine persistent disks to be encrypted using 256-bit AES encryption keys that are stored completely off-cloud inside their on-premises Key Management Hardware (HSM). GCP must NOT store the key anywhere on disk or in Cloud KMS. Which encryption model is required?",
+    "options": [
+      "A. Default Google-managed encryption",
+      "B. Customer-Supplied Encryption Keys (CSEK)",
+      "C. Customer-Managed Encryption Keys (CMEK)",
+      "D. VPC Service Controls"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Customer-Supplied Encryption Keys (CSEK) allow customers to supply their own raw 256-bit AES encryption key in API calls; Google uses the key in memory to encrypt data and immediately discards the key without persisting it anywhere on GCP.",
+    "distractors": {
+      "A": "Google-managed keys are generated and managed internally by Google.",
+      "C": "CMEK keys are stored and managed inside Google Cloud KMS/HSM.",
+      "D": "VPC Service Controls handle API perimeter network isolation, not cryptographic keys."
+    }
+  },
+  {
+    "id": "q87",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "Fine-Grained IAM Conditions",
+    "caseStudy": "General Architecture",
+    "question": "You need to grant temporary admin access (`roles/resourcemanager.organizationAdmin`) to a third-party audit consultant. The access must expire automatically after 7 days and only be usable when the request originates from corporate office IP ranges (`203.0.113.0/24`). How should this role binding be granted?",
+    "options": [
+      "A. Grant permanent Organization Admin role directly in IAM without conditions",
+      "B. Use IAM Policy Bindings with IAM Conditions specifying `request.time` and `request.auth.access_levels` / IP attributes",
+      "C. Email root account credentials to the consultant",
+      "D. Disable organization audit logging"
+    ],
+    "correctAnswer": "B",
+    "explanation": "IAM Conditions allow administrators to attach conditional attribute expressions (date/time windows, origin IP access levels, target resource tags) to IAM role bindings, enforcing temporary and context-restricted access.",
+    "distractors": {
+      "A": "Permanent unconditional access violates least-privilege principles and requires manual revocation.",
+      "C": "Sharing root credentials violates enterprise security compliance.",
+      "D": "Disabling logging hides administrative actions."
+    }
+  },
+  {
+    "id": "q88",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "Geographic Data Location Restrictions",
+    "caseStudy": "EHR Healthcare",
+    "question": "European data privacy regulations require that developer teams in your organization CANNOT create Cloud Storage buckets, BigQuery datasets, or Compute Engine VMs outside of European GCP regions (`europe-west1`, `europe-west3`). What organization policy constraint enforces this?",
+    "options": [
+      "A. `gcp.resourceLocations` Organization Policy constraint set to `in:europe-locations`",
+      "B. `iam.disableServiceAccountKeyCreation`",
+      "C. Firewall rules blocking outbound TCP traffic to US IP addresses",
+      "D. Cloud DNS Private Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "The `gcp.resourceLocations` Organization Policy constraint restricts the geographical regions where new GCP resources can be created, enforcing data residency compliance.",
+    "distractors": {
+      "A": "",
+      "B": "Disable Service Account Key Creation blocks service account JSON keys, not resource location creation.",
+      "C": "Firewall rules block VM network traffic, but do not prevent developers from provisioning storage buckets in US regions via GCP APIs.",
+      "D": "DNS forwarding handles domain name resolution."
+    }
+  },
+  {
+    "id": "q89",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "Security Log Analysis & SIEM Integration",
+    "caseStudy": "General Architecture",
+    "question": "Your SOC (Security Operations Center) team uses an external enterprise SIEM (Splunk / QRadar). They need to ingest all GCP Cloud Audit Logs, VPC Flow Logs, and Security Command Center findings in near real-time. What is the standard GCP log export architecture?",
+    "options": [
+      "A. Configure an Organization-level Cloud Logging Sink exporting to Pub/Sub, pulled by SIEM subscriber connectors",
+      "B. Download log files manually from GCP Console every morning",
+      "C. Send log text messages via SMS",
+      "D. Print logs onto physical paper"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Centralized Cloud Logging Sinks at the Organization level configured with a Pub/Sub topic destination provide a high-throughput, real-time streaming pipeline for external SIEM integration.",
+    "distractors": {
+      "A": "",
+      "B": "Manual daily downloads introduce high latency and fail real-time security incident response goals.",
+      "C": "SMS messages cannot handle terabytes of structured JSON log streams.",
+      "D": "Physical paper printing is impossible for enterprise cloud log volumes."
+    }
+  },
+  {
+    "id": "q90",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "Data-in-Use Memory Encryption",
+    "caseStudy": "EHR Healthcare",
+    "question": "EHR Healthcare processes sensitive genomic health data in Compute Engine VM memory. They require protection against physical memory snooping, hypervisor memory inspection, or rogue cloud admin access while data is active in RAM. What GCP compute security feature should be enabled?",
+    "options": [
+      "A. Standard Compute Engine VMs",
+      "B. Confidential VMs (utilizing AMD SEV hardware memory encryption)",
+      "C. Cloud Armor security policies",
+      "D. Cloud Memory-store for Redis"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Confidential VMs leverage hardware-based memory encryption (AMD SEV) to encrypt data in use while it is processed in RAM, protecting memory contents from hypervisor or host inspection.",
+    "distractors": {
+      "A": "Standard VMs do not encrypt memory contents in RAM at the hardware level.",
+      "C": "Cloud Armor protects HTTP/S load balancer edge traffic, not VM hardware RAM.",
+      "D": "Memorystore is an in-memory Redis cache without hardware SEV memory isolation."
+    }
+  },
+  {
+    "id": "q149",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 1: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q150",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 2: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q151",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 3: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q152",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 4: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q153",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 5: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q154",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 6: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q155",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 7: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q156",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 8: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q157",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 9: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q158",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 10: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q159",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 11: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q160",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 12: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q161",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 13: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q162",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 14: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q163",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 15: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q164",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 16: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q165",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 17: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q166",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 18: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q167",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 19: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q168",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 20: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q169",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 21: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  },
+  {
+    "id": "q170",
+    "domain": "Domain 3: Designing for security and compliance",
+    "topic": "IAM & Enterprise Security Policy Enforcement",
+    "caseStudy": "EHR Healthcare",
+    "question": "Security Scenario 22: EHR Healthcare needs to enforce strict security compliance rules prohibiting public IP assignments on Compute Engine instances and requiring Customer-Managed Encryption Keys (CMEK) for all Cloud Storage buckets. What GCP governance feature enforces these constraints?",
+    "options": [
+      "A. Organization Policy Constraints applied at the Organization Node level",
+      "B. Cloud Logging Sinks",
+      "C. Compute Engine Startup Scripts",
+      "D. Public DNS Forwarding"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Organization Policy Constraints centrally enforce resource configurations and security prohibitions across all present and future projects under an organization.",
+    "distractors": {
+      "A": "",
+      "B": "Logging sinks record audit events, but do not block policy violations.",
+      "C": "Startup scripts run inside VMs, but cannot enforce organization-wide GCP API constraints.",
+      "D": "DNS forwarding handles domain resolution."
+    }
+  }
+]
