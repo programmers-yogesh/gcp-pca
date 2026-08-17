@@ -17,7 +17,7 @@
   <header class="app-header">
     <div class="header-container">
       <div class="logo-area">
-        <div class="gcp-badge">GCP PCA</div>
+        <div class="gcp-badge">☁️ GCP PCA</div>
         <div>
           <h1>Professional Cloud Architect</h1>
           <p class="subtitle">Exam Practice & Syllabus Mastery Kit (210 Scenario Questions)</p>
@@ -39,7 +39,7 @@
     <!-- TAB 1: SYLLABUS & DOMAINS -->
     <section id="tab-syllabus" class="tab-content active">
       <div class="banner">
-        <h2>Syllabus Breakdown (6 Domains - 210 Questions)</h2>
+        <h2>📚 Syllabus Breakdown (6 Domains - 210 Questions)</h2>
         <p>The Google Cloud Certified Professional Cloud Architect exam evaluates your capability across six core technical domains. Filter questions or review domain weightages below.</p>
       </div>
 
@@ -47,55 +47,55 @@
         <div class="domain-card" data-domain-id="1">
           <div class="domain-header">
             <span class="weightage">24%</span>
-            <h3>Domain 1: Designing & Planning Architecture</h3>
+            <h3>🏗️ Domain 1: Design & Plan Architecture</h3>
           </div>
           <p>Multi-region architecture, database selection (Spanner vs Bigtable), serverless vs container strategy, hybrid connectivity. (50 Questions)</p>
-          <button class="btn btn-secondary filter-domain-btn" data-domain-name="Domain 1: Designing and planning a cloud solution architecture">Practice Domain 1 Questions</button>
+          <button class="btn btn-secondary filter-domain-btn" data-domain-name="Domain 1: Designing and planning a cloud solution architecture">🚀 Practice Domain 1 Questions</button>
         </div>
 
         <div class="domain-card" data-domain-id="2">
           <div class="domain-header">
             <span class="weightage">21%</span>
-            <h3>Domain 2: Provisioning & Infrastructure</h3>
+            <h3>⚙️ Domain 2: Provisioning & Infrastructure</h3>
           </div>
           <p>Infrastructure as Code (Terraform state locking), Shared VPC setup, private connectivity, CI/CD pipelines. (45 Questions)</p>
-          <button class="btn btn-secondary filter-domain-btn" data-domain-name="Domain 2: Managing and provisioning the cloud solution infrastructure">Practice Domain 2 Questions</button>
+          <button class="btn btn-secondary filter-domain-btn" data-domain-name="Domain 2: Managing and provisioning the cloud solution infrastructure">🚀 Practice Domain 2 Questions</button>
         </div>
 
         <div class="domain-card" data-domain-id="3">
           <div class="domain-header">
             <span class="weightage">18%</span>
-            <h3>Domain 3: Security & Compliance</h3>
+            <h3>🔒 Domain 3: Security & Compliance</h3>
           </div>
           <p>Workload Identity, Identity-Aware Proxy (IAP), DLP API (Sensitive Data Protection), CMEK KMS keys, HIPAA/PCI compliance. (40 Questions)</p>
-          <button class="btn btn-secondary filter-domain-btn" data-domain-name="Domain 3: Designing for security and compliance">Practice Domain 3 Questions</button>
+          <button class="btn btn-secondary filter-domain-btn" data-domain-name="Domain 3: Designing for security and compliance">🚀 Practice Domain 3 Questions</button>
         </div>
 
         <div class="domain-card" data-domain-id="4">
           <div class="domain-header">
             <span class="weightage">18%</span>
-            <h3>Domain 4: Process Optimization & Cost</h3>
+            <h3>📈 Domain 4: Process Optimization & Cost</h3>
           </div>
           <p>BigQuery partitioning/clustering, Cloud Storage lifecycle management, Committed Use Discounts, migration strategies. (35 Questions)</p>
-          <button class="btn btn-secondary filter-domain-btn" data-domain-name="Domain 4: Analyzing and optimizing technical and business processes">Practice Domain 4 Questions</button>
+          <button class="btn btn-secondary filter-domain-btn" data-domain-name="Domain 4: Analyzing and optimizing technical and business processes">🚀 Practice Domain 4 Questions</button>
         </div>
 
         <div class="domain-card" data-domain-id="5">
           <div class="domain-header">
             <span class="weightage">11%</span>
-            <h3>Domain 5: Managing Implementations</h3>
+            <h3>🛠️ Domain 5: Managing Implementations</h3>
           </div>
           <p>Container migration to Cloud Run/GKE, API Gateways (Apigee), Database Migration Service (DMS), service mesh. (22 Questions)</p>
-          <button class="btn btn-secondary filter-domain-btn" data-domain-name="Domain 5: Managing implementations of cloud architecture">Practice Domain 5 Questions</button>
+          <button class="btn btn-secondary filter-domain-btn" data-domain-name="Domain 5: Managing implementations of cloud architecture">🚀 Practice Domain 5 Questions</button>
         </div>
 
         <div class="domain-card" data-domain-id="6">
           <div class="domain-header">
             <span class="weightage">8%</span>
-            <h3>Domain 6: Reliability & Operations</h3>
+            <h3>🚨 Domain 6: Reliability & Operations</h3>
           </div>
           <p>Disaster recovery (Active-Active vs Warm/Cold standby), Error Budget Burn Rate alerts, Cloud Observability (Logging/Monitoring). (18 Questions)</p>
-          <button class="btn btn-secondary filter-domain-btn" data-domain-name="Domain 6: Ensuring solution and operations reliability">Practice Domain 6 Questions</button>
+          <button class="btn btn-secondary filter-domain-btn" data-domain-name="Domain 6: Ensuring solution and operations reliability">🚀 Practice Domain 6 Questions</button>
         </div>
       </div>
     </section>
@@ -121,7 +121,7 @@
             <option value="EXAM">Timed Exam Mode (120 Mins & Scorecard)</option>
           </select>
 
-          <label>Jump to Q:</label>
+          <label>🎯 Jump to Q:</label>
           <select id="question-jump-select" class="select-input">
             <!-- Populated dynamically by app.js -->
           </select>
@@ -137,7 +137,7 @@
       <!-- Interactive Question Palette Drawer -->
       <div id="question-grid-palette" class="card question-palette hidden">
         <div class="palette-header">
-          <h4>Question Palette Navigator</h4>
+          <h4>🔢 Question Palette Navigator</h4>
           <span class="palette-legend">
             <span class="legend-item"><span class="dot dot-unanswered"></span> Unanswered</span>
             <span class="legend-item"><span class="dot dot-correct"></span> Correct</span>
@@ -153,9 +153,9 @@
       <!-- Question Container -->
       <div id="question-container" class="card question-card">
         <div class="question-meta">
-          <span id="q-domain-badge" class="badge badge-domain">Domain 1</span>
-          <span id="q-case-badge" class="badge badge-case">Cymbal Retail</span>
-          <span id="q-topic-badge" class="badge badge-topic">Database Selection</span>
+          <span id="q-domain-badge" class="badge badge-domain">🏷️ Domain 1</span>
+          <span id="q-case-badge" class="badge badge-case">💼 Cymbal Retail</span>
+          <span id="q-topic-badge" class="badge badge-topic">📌 Database Selection</span>
         </div>
 
         <h3 id="q-title" class="question-text">Question text loading...</h3>
@@ -171,15 +171,15 @@
         </div>
 
         <div class="quiz-footer">
-          <button id="btn-prev" class="btn btn-secondary" disabled>← Previous</button>
-          <button id="btn-submit" class="btn btn-primary hidden">Check Answer</button>
-          <button id="btn-next" class="btn btn-primary">Next →</button>
+          <button id="btn-prev" class="btn btn-secondary" disabled>⬅️ Previous</button>
+          <button id="btn-submit" class="btn btn-primary hidden">Check Answer ✔️</button>
+          <button id="btn-next" class="btn btn-primary">Next ➡️</button>
         </div>
       </div>
 
       <!-- Exam Results Summary Modal/Container -->
       <div id="exam-results" class="card results-card hidden">
-        <h2>🎉 Exam Results & Performance Analysis</h2>
+        <h2>🏆 Exam Results & Performance Analysis</h2>
         <div class="score-display">
           <div class="score-circle">
             <span id="score-percentage">0%</span>
@@ -193,14 +193,14 @@
             <p id="res-verdict" class="verdict-tag">PASS</p>
           </div>
         </div>
-        <button id="btn-restart" class="btn btn-primary">Restart Practice</button>
+        <button id="btn-restart" class="btn btn-primary">🔄 Restart Practice</button>
       </div>
     </section>
 
     <!-- TAB 3: CASE STUDIES -->
     <section id="tab-casestudies" class="tab-content">
       <div class="banner">
-        <h2>Official GCP PCA Case Studies</h2>
+        <h2>🏢 Official GCP PCA Case Studies</h2>
         <p>Case study questions represent 20–30% of the exam score. Below is the architectural breakdown and key design patterns for each official scenario.</p>
       </div>
 
@@ -274,7 +274,7 @@
     <!-- TAB 4: DECISION MATRIX -->
     <section id="tab-cheatsheets" class="tab-content">
       <div class="banner">
-        <h2>Expanded GCP Architectural Decision Matrices</h2>
+        <h2>⚡ Expanded GCP Architectural Decision Matrices</h2>
         <p>Comprehensive reference tables for instant architectural decision-making on the exam (69 Scenarios across 7 Domains).</p>
       </div>
 

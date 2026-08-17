@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnNext = document.getElementById('btn-next');
   const btnRestart = document.getElementById('btn-restart');
 
-  // Theme Management (Fixes issue where theme click emptied page)
+  // Theme Management
   const savedTheme = localStorage.getItem('gcp_theme') || 'dark';
   applyTheme(savedTheme);
 
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-  // Load & Render Decision Matrices JSON
+  // Load & Render Expanded Decision Matrices JSON
   fetch('data/decision_matrices.json')
     .then(res => res.json())
     .then(matrices => {
@@ -108,168 +108,182 @@ document.addEventListener('DOMContentLoaded', () => {
       <!-- 1. Compute Matrix -->
       <div class="card matrix-card">
         <h3>⚡ 1. Compute, Container & Serverless Engine Matrix (${data.computeMatrix.length} Scenarios)</h3>
-        <table class="matrix-table">
-          <thead>
-            <tr>
-              <th>Requirement</th>
-              <th>Recommended Compute Target</th>
-              <th>Scaling Model</th>
-              <th>Primary Exam Trade-Off</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${data.computeMatrix.map(row => `
+        <div class="table-responsive">
+          <table class="matrix-table">
+            <thead>
               <tr>
-                <td>${row.requirement}</td>
-                <td><strong>${row.recommended}</strong></td>
-                <td>${row.scaling}</td>
-                <td>${row.tradeoff}</td>
+                <th>Requirement</th>
+                <th>Recommended Compute Target</th>
+                <th>Scaling Model</th>
+                <th>Primary Exam Trade-Off</th>
               </tr>
-            `).join('')}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              ${data.computeMatrix.map(row => `
+                <tr>
+                  <td>${row.requirement}</td>
+                  <td><strong>${row.recommended}</strong></td>
+                  <td>${row.scaling}</td>
+                  <td>${row.tradeoff}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- 2. Database & Storage Matrix -->
       <div class="card matrix-card">
         <h3>📊 2. Database & Data Storage Selection Matrix (${data.databaseStorageMatrix.length} Scenarios)</h3>
-        <table class="matrix-table">
-          <thead>
-            <tr>
-              <th>Requirement</th>
-              <th>Recommended GCP Service</th>
-              <th>Scalability & SLA</th>
-              <th>Primary Exam Trade-Off</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${data.databaseStorageMatrix.map(row => `
+        <div class="table-responsive">
+          <table class="matrix-table">
+            <thead>
               <tr>
-                <td>${row.requirement}</td>
-                <td><strong>${row.recommended}</strong></td>
-                <td>${row.scalability}</td>
-                <td>${row.tradeoff}</td>
+                <th>Requirement</th>
+                <th>Recommended GCP Service</th>
+                <th>Scalability & SLA</th>
+                <th>Primary Exam Trade-Off</th>
               </tr>
-            `).join('')}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              ${data.databaseStorageMatrix.map(row => `
+                <tr>
+                  <td>${row.requirement}</td>
+                  <td><strong>${row.recommended}</strong></td>
+                  <td>${row.scalability}</td>
+                  <td>${row.tradeoff}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- 3. Networking & Load Balancing Matrix -->
       <div class="card matrix-card">
         <h3>🌐 3. Networking, Load Balancing & Hybrid Connectivity Matrix (${data.networkingLoadBalancingMatrix.length} Scenarios)</h3>
-        <table class="matrix-table">
-          <thead>
-            <tr>
-              <th>Requirement</th>
-              <th>Recommended Networking Solution</th>
-              <th>Scope / Bandwidth</th>
-              <th>Key Exam Characteristic</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${data.networkingLoadBalancingMatrix.map(row => `
+        <div class="table-responsive">
+          <table class="matrix-table">
+            <thead>
               <tr>
-                <td>${row.requirement}</td>
-                <td><strong>${row.recommended}</strong></td>
-                <td>${row.scope}</td>
-                <td>${row.characteristic}</td>
+                <th>Requirement</th>
+                <th>Recommended Networking Solution</th>
+                <th>Scope / Bandwidth</th>
+                <th>Key Exam Characteristic</th>
               </tr>
-            `).join('')}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              ${data.networkingLoadBalancingMatrix.map(row => `
+                <tr>
+                  <td>${row.requirement}</td>
+                  <td><strong>${row.recommended}</strong></td>
+                  <td>${row.scope}</td>
+                  <td>${row.characteristic}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- 4. Security & Compliance Matrix -->
       <div class="card matrix-card">
         <h3>🔒 4. Security, IAM, Encryption & Compliance Matrix (${data.securityComplianceMatrix.length} Scenarios)</h3>
-        <table class="matrix-table">
-          <thead>
-            <tr>
-              <th>Requirement</th>
-              <th>Recommended GCP Tool</th>
-              <th>Key Exam Rationale</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${data.securityComplianceMatrix.map(row => `
+        <div class="table-responsive">
+          <table class="matrix-table">
+            <thead>
               <tr>
-                <td>${row.requirement}</td>
-                <td><strong>${row.recommended}</strong></td>
-                <td>${row.rationale}</td>
+                <th>Requirement</th>
+                <th>Recommended GCP Tool</th>
+                <th>Key Exam Rationale</th>
               </tr>
-            `).join('')}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              ${data.securityComplianceMatrix.map(row => `
+                <tr>
+                  <td>${row.requirement}</td>
+                  <td><strong>${row.recommended}</strong></td>
+                  <td>${row.rationale}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- 5. Analytics & AI Matrix -->
       <div class="card matrix-card">
         <h3>🤖 5. Data Analytics, Messaging & AI Matrix (${data.analyticsAiMatrix.length} Scenarios)</h3>
-        <table class="matrix-table">
-          <thead>
-            <tr>
-              <th>Requirement</th>
-              <th>Recommended Service</th>
-              <th>Operational Characteristic</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${data.analyticsAiMatrix.map(row => `
+        <div class="table-responsive">
+          <table class="matrix-table">
+            <thead>
               <tr>
-                <td>${row.requirement}</td>
-                <td><strong>${row.recommended}</strong></td>
-                <td>${row.rationale}</td>
+                <th>Requirement</th>
+                <th>Recommended Service</th>
+                <th>Operational Characteristic</th>
               </tr>
-            `).join('')}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              ${data.analyticsAiMatrix.map(row => `
+                <tr>
+                  <td>${row.requirement}</td>
+                  <td><strong>${row.recommended}</strong></td>
+                  <td>${row.rationale}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- 6. Disaster Recovery Matrix -->
       <div class="card matrix-card">
         <h3>🚨 6. Disaster Recovery & Availability Strategy Matrix (${data.disasterRecoveryMatrix.length} Scenarios)</h3>
-        <table class="matrix-table">
-          <thead>
-            <tr>
-              <th>RTO / RPO Target</th>
-              <th>DR Strategy</th>
-              <th>Recommended Architecture</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${data.disasterRecoveryMatrix.map(row => `
+        <div class="table-responsive">
+          <table class="matrix-table">
+            <thead>
               <tr>
-                <td><strong>${row.requirement}</strong></td>
-                <td>${row.recommended}</td>
-                <td>${row.architecture}</td>
+                <th>RTO / RPO Target</th>
+                <th>DR Strategy</th>
+                <th>Recommended Architecture</th>
               </tr>
-            `).join('')}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              ${data.disasterRecoveryMatrix.map(row => `
+                <tr>
+                  <td><strong>${row.requirement}</strong></td>
+                  <td>${row.recommended}</td>
+                  <td>${row.architecture}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- 7. Migration Matrix -->
       <div class="card matrix-card">
         <h3>🚚 7. Migration Tooling & Strategy Matrix (${data.migrationToolingMatrix.length} Scenarios)</h3>
-        <table class="matrix-table">
-          <thead>
-            <tr>
-              <th>Migration Scenario</th>
-              <th>Recommended Tool</th>
-              <th>Migration Mechanism</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${data.migrationToolingMatrix.map(row => `
+        <div class="table-responsive">
+          <table class="matrix-table">
+            <thead>
               <tr>
-                <td>${row.scenario}</td>
-                <td><strong>${row.tool}</strong></td>
-                <td>${row.mechanism}</td>
+                <th>Migration Scenario</th>
+                <th>Recommended Tool</th>
+                <th>Migration Mechanism</th>
               </tr>
-            `).join('')}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              ${data.migrationToolingMatrix.map(row => `
+                <tr>
+                  <td>${row.scenario}</td>
+                  <td><strong>${row.tool}</strong></td>
+                  <td>${row.mechanism}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
       </div>
     `;
   }
